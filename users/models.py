@@ -56,7 +56,7 @@ class Companies(models.Model):
 
 class Contracts(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    company = models.UUIDField(ForeignKey(Company, on_delete=models.CASCADE))
+    company = models.UUIDField(ForeignKey(Companies, on_delete=models.CASCADE))
     name = models.CharField(max_length=255)
     documment = models.CharField(max_length=255)
 
@@ -80,7 +80,7 @@ class Application(models.Model):
     owner = models.IntegerField(ForeignKey(User, on_delete=models.CASCADE, related_name='application_owner'))
     type_request = models.CharField(max_length=255)
     message = models.TextField()
-    for_company = ForeignKey(Company, on_delete=models.CASCADE, related_name='application_for_company')
+    for_company = ForeignKey(Companies, on_delete=models.CASCADE, related_name='application_for_company')
     for_contract = ForeignKey(Contracts, on_delete=models.CASCADE, related_name='application_for_contract')
     application_created = models.DateTimeField(auto_now_add=True)
 
