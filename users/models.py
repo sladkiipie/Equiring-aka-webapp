@@ -1,21 +1,21 @@
 import uuid
 
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.db.models import ForeignKey, OneToOneField
 
 
 # Создание менеджера пользователей
 class MyUserManager(BaseUserManager):
-    def create_user(self, username, password=None, **extra_fields):
-        if not username:
+    def create_user(self, login, password=None, **extra_fields):
+        if not login:
             raise ValueError("User must have a login")
-        user = self.model(username=username, **extra_fields)
+        user = self.model(login=login, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, password=None, **extra_fields):
+    def create_superuser(self, login, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -24,7 +24,7 @@ class MyUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Суперпользователь должен иметь is_superuser=True.')
 
-        return self.create_user(username, password, **extra_fields)
+        return self.create_user(login, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
     login = models.CharField(max_length=255, unique=True, verbose_name='Логин')
@@ -38,13 +38,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
+    objects = MyUserManager()
+
     USERNAME_FIELD = 'login'
 
     def __str__(self):
         return self.login
 
 class Company(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     INN = models.BigIntegerField()
     OGRN = models.BigIntegerField()
     name = models.CharField(max_length=255)
@@ -54,7 +56,7 @@ class Company(models.Model):
         return self.name
 
 class Contracts(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.UUIDField(ForeignKey(Company, on_delete=models.CASCADE))
     name = models.CharField(max_length=255)
     documment = models.CharField(max_length=255)
@@ -63,7 +65,7 @@ class Contracts(models.Model):
         return self.name
 
 class Transactions(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     contract = models.ForeignKey(Contracts, on_delete=models.CASCADE)
     ammount = models.DecimalField(max_digits=10, decimal_places=2)
     type_transaction = models.CharField(max_length=255)

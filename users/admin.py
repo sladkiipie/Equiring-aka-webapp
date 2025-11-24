@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from users.models import *
+
+users_models = [
+    admin.site.register(User),
+    admin.site.register(Company),
+    admin.site.register(Contracts),
+    admin.site.register(Transactions),
+    admin.site.register(Application),
+    admin.site.register(ApplicationCheck)
+]
