@@ -27,13 +27,12 @@ class MyUserManager(BaseUserManager):
         return self.create_user(login, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    login = models.CharField(max_length=255, unique=True, verbose_name='Логин')
+    login = models.CharField(max_length=255, unique=True, verbose_name='login')
     password = models.CharField(max_length=128) # паоль хешиоруется на стороке бекенда
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=15)
     email = models.CharField(max_length=255)
     message = models.TextField()
-    group = models.TextField()
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -45,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.login
 
-class Company(models.Model):
+class Companies(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     INN = models.BigIntegerField()
     OGRN = models.BigIntegerField()
