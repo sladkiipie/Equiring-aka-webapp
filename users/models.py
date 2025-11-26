@@ -80,8 +80,8 @@ class Application(models.Model):
     owner = models.IntegerField(ForeignKey(User, on_delete=models.CASCADE, related_name='application_owner'))
     type_request = models.CharField(max_length=255)
     message = models.TextField()
-    for_company = ForeignKey(Companies, on_delete=models.CASCADE, related_name='application_for_company')
-    for_contract = ForeignKey(Contracts, on_delete=models.CASCADE, related_name='application_for_contract')
+    for_company = models.ForeignKey(Companies, on_delete=models.CASCADE, related_name='application_for_company')
+    for_contract = models.ForeignKey(Contracts, on_delete=models.CASCADE, related_name='application_for_contract')
     application_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
