@@ -10,7 +10,7 @@ from users.models import Contracts
 
 
 
-def update_support_ticket(request):
+def update_support_ticket(request): # изменяет статус тикета
     try:
         support_ticket = SupporTicket.objects.get(id=id)
         form = SupporTicketForm(instance=support_ticket)
@@ -25,12 +25,12 @@ def update_support_ticket(request):
     except SupporTicket.DoesNotExist:
         messages.error(request, 'Support ticket not found.')
 
-def updatet_contract(request):
+def update_contract(request): # обновляет  информацию о контаркте ссылку на компанию, назывние контракта и файл документа
     try:
         contracts = Contracts.object.get(id=id)
         form = ContractForm(instance=contracts)
         if request.method == "POST":
-            Contracts.object.update(
+            Contracts.objects.update(
                 company=request.POST['company'],
                 name=request.POST['name'],
                 document=request.POST['document'],
