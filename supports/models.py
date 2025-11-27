@@ -9,7 +9,7 @@ from users.models import Contracts, User
 class SupporTicket(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     contract = models.ForeignKey(Contracts, related_name='contract', blank=True,on_delete=models.CASCADE)
-    responsible_id = ForeignKey(User, related_name='supporter', blank=True,on_delete=models.CASCADE)
+    responsible_id = models.ForeignKey(User, related_name='supporter', blank=True,on_delete=models.CASCADE)
     asker_id = models.ForeignKey(User, related_name='asker', blank=True,on_delete=models.CASCADE)
     description = models.TextField()
     status = models.CharField(max_length=255)
@@ -19,7 +19,7 @@ class SupporTicket(models.Model):
         return self.description
 
 class SupportMessage(models.Model):
-    ticket_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ticket_id = models.UUIDField(ForeignKey(SupporTicket, default=uuid.uuid4, editable=False, on_delete=models.CASCADE))
     message = models.CharField(max_length=255)
     date_message = models.DateTimeField(auto_now_add=True)
 
