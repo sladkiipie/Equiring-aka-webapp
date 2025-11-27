@@ -11,7 +11,7 @@ class UserForm(ModelForm):
 class TicketForm(ModelForm):
     class Meta:
         model = SupporTicket()
-        fields = ['contact', 'description']
+        fields = ['contract', 'description']
 
 class ContractForm(ModelForm):
     class Meta:
