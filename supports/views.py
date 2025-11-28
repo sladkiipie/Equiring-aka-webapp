@@ -15,7 +15,7 @@ def update_support_ticket(request): # изменяет статус тикета
         support_ticket = SupporTicket.objects.get(id=id)
         form = SupporTicketForm(instance=support_ticket)
         if request.method == "POST":
-            support_ticket.object.update(
+            support_ticket.objects.update(
                 status=request.POST['status'],
             )
             return redirect(request, 'support/ticket.html')
