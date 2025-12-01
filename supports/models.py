@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db import models
 from django.db.models import ForeignKey
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser
 from model_utils.models import TimeStampedModel, SoftDeletableModel
 from django.db.models import Q
 from typing import Optional, Any
@@ -52,7 +51,10 @@ class DialogsModel(TimeStampedModel):
                               related_name="+", db_index=True)
 
     class Meta:
-        unique_together = (('user1', 'user2'), ('user2', 'user1'))
+        constraints = [
+            models.UniqueConstraint(fields=['user1', 'user2'], name="unique_dialogs"),
+            models.UniqueConstraint(fields=['user2', 'user1'], name="unique_dialogs_reversed")
+        ]
         verbose_name = "Dialogs"
         verbose_name_plural = "Dialogs"
 
@@ -60,18 +62,18 @@ class DialogsModel(TimeStampedModel):
         return _("Dialogs beetwen ") + f"{self.user1} {self.user2}"
 
     @staticmethod
-    def dialog_exists(u1: AbstractBaseUser, u2: AbstractBaseUser) -> Optional[Any]:
+    def dialog_exists(u1: User, u2: User) -> Optional[Any]:
         return DialogsModel.objects.filter(Q(user1=u1, user2=u2) | Q(user2=u2, user1=u1)).first()
 
     @staticmethod
-    def create_if_not_exists(u1: AbstractBaseUser, u2: AbstractBaseUser): # Попробовать указать модель User если не будет рабоать
+    def create_if_not_exists(u1: User, u2: User): # Попробовать указать модель User если не будет рабоать
         res = DialogsModel.dialog_exists(u1, u2)
         if not res:
             DialogsModel.objects.create(user1=u1, user2=u2)
 
     @staticmethod
-    def get_diaogs_for_user(user: AbstractBaseUser): # Попробовать указать модель User если не будет рабоать
-        return DialogsModel.objects.filter(Q(user1=user) | Q(user2=user)).values_list('user1_pk', 'user2_pk')
+    def get_dialogs_for_user(user: User): # Попробовать указать модель User если не будет рабоать
+        return DialogsModel.objects.filter(Q(user1=user) | Q(user2=user)).values_list('user1_id', 'user2_id')
 
 class MessageModel(TimeStampedModel, SoftDeletableModel):
     id = models.BigAutoField(primary_key=True, verbose_name="id")
