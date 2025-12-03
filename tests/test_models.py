@@ -37,7 +37,7 @@ class MessageAndDialogModelTests(TestCase):
     def test_str_dialog(self):
         u1, u2 = UserFactory.create(), UserFactory.create()
         dialog = DialogsModelFactory.create(user1=u1, user2=u2)
-        self.assertEqual(str(dialog), f"Dialog between {u1.pk}, {u2.pk}")
+        self.assertEqual(str(dialog), f"Dialogs beetwen {u1.login} {u2.login}")
 
     def test_dialog_unique(self):
         u1, u2 = UserFactory.create(), UserFactory.create()
@@ -53,26 +53,26 @@ class MessageAndDialogModelTests(TestCase):
         self.assertEqual(d, d2)
 
     def test_get_unread_count_for_dialog_with_user(self):
-        sender, recipient = UserFactory.create(), UserFactory.create()
+        asker_id, responsible_id = UserFactory.create(), UserFactory.create()
         num_unread = faker.random.randint(1, 20)
-        _ = MessageModelFactory.create_batch(num_unread, read=False, sender=sender, recipient=recipient)
+        _ = MessageModelFactory.create_batch(num_unread, read=False, asker_id=asker_id, responsible_id=responsible_id)
 
-        self.assertEqual(MessageModel.get_unread_count_for_dialog_with_user(sender, recipient), num_unread)
+        self.assertEqual(MessageModel.get_unread_count_for_dialog_with_user(asker_id, responsible_id), num_unread)
 
     def test_get_last_message_for_dialog(self):
-        sender, recipient = UserFactory.create(), UserFactory.create()
-        last_message = MessageModelFactory.create(sender=sender, recipient=recipient)
+        asker_id, responsible_id = UserFactory.create(), UserFactory.create()
+        last_message = MessageModelFactory.create(asker_id=asker_id, responsible_id=responsible_id)
 
-        last_message1 = MessageModel.get_last_message_for_dialog(sender, recipient)
-        last_message2 = MessageModel.get_last_message_for_dialog(recipient, sender)
+        last_message1 = MessageModel.get_last_message_for_dialog(asker_id, responsible_id)
+        last_message2 = MessageModel.get_last_message_for_dialog(responsible_id, asker_id)
 
         self.assertEqual(last_message, last_message1)
         self.assertEqual(last_message, last_message2)
 
     def test_save_creates_dialog_if_not_exists(self):
         before = DialogsModel.objects.count()
-        sender, recipient = UserFactory.create(), UserFactory.create()
-        MessageModelFactory.create(sender=sender, recipient=recipient)
+        asker_id, responsible_id = UserFactory.create(), UserFactory.create()
+        MessageModelFactory.create(asker_id=asker_id, responsible_id=responsible_id)
         after = DialogsModel.objects.count()
         self.assertEqual(after, before + 1)
 
@@ -157,8 +157,8 @@ class TestCaseMessageModelGenerated(TestCase):
         self.assertIsNotNone(message_model.modified)
         self.assertIsNotNone(message_model.is_removed)
         self.assertIsNotNone(message_model.id)
-        self.assertIsNotNone(message_model.sender)
-        self.assertIsNotNone(message_model.recipient)
+        self.assertIsNotNone(message_model.asker_id)
+        self.assertIsNotNone(message_model.responsible_id)
         self.assertIsNotNone(message_model.text)
         self.assertIsNone(message_model.file)
         self.assertIsNotNone(message_model.read)

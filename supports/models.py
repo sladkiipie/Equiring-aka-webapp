@@ -77,9 +77,9 @@ class DialogsModel(TimeStampedModel):
 
 class MessageModel(TimeStampedModel, SoftDeletableModel):
     id = models.BigAutoField(primary_key=True, verbose_name="id")
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Author",
+    asker_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author",
                                related_name="from_user", db_index=True)
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Recipient",
+    responsible_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Responsible",
                                   related_name="to_user", db_index=True)
     text = models.TextField(verbose_name="Text", blank=True)
     file = models.ForeignKey(UploadedFile, related_name='message',  on_delete=models.DO_NOTHING,
@@ -88,21 +88,21 @@ class MessageModel(TimeStampedModel, SoftDeletableModel):
     all_objects = models.Manager()
 
     @staticmethod
-    def get_unread_count_for_dialog_with_user(sender, recipient):
-        return MessageModel.objects.filter(sender_id=sender, recipient_id=recipient, read=False).count()
+    def get_unread_count_for_dialog_with_user(asker, resoinsible):
+        return MessageModel.objects.filter(asker_id=asker, responsible_id=resoinsible, read=False).count()
 
     @staticmethod
-    def get_last_message_for_dialog(sender, recipient):
+    def get_last_message_for_dialog(asker, responsible):
         return MessageModel.objects.filter(
-            Q(sender_id=sender, recipient_id=recipient) | Q(sender_id=recipient, recipient_id=sender)) \
-            .select_related('sender', 'recipient').first()
+            Q(asker_id=asker, responsible_id=responsible) | Q(asker_id=responsible, responsible_id=asker)) \
+            .select_related('asker_id', 'responsible_id').first()
 
     def __str__(self):
         return str(self.pk)
 
     def save(self, *args, **kwargs):
         super(MessageModel, self).save(*args, **kwargs)
-        DialogsModel.create_if_not_exists(self.sender, self.recipient)
+        DialogsModel.create_if_not_exists(self.asker_id, self.responsible_id)
 
     class Meta:
         ordering = ('-created',)
