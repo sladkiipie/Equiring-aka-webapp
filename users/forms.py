@@ -16,4 +16,4 @@ class TicketForm(ModelForm):
 class ContractForm(ModelForm):
     class Meta:
         model = Contracts
-        fields = ['']
+        fields = ['company', 'name', 'document']

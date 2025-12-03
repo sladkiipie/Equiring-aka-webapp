@@ -2,4 +2,8 @@ asgiref==3.10.0
 Django==5.2.8
 pip==25.3
 sqlparse==0.5.3
-psycopg==3.2.13
+psycopg2-binary==2.9.11
+django-model-utils==5.0.0
+factory_boy==3.3.3
+Faker==38.2.0
+
