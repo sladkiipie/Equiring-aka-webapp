@@ -1,10 +1,9 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-
 from supports.models import SupporTicket
-from .models import User
-from .forms import TicketForm
+from .models import User, Contracts
+from .forms import TicketForm, PrimaryUserForm
 
 
 
@@ -30,7 +29,7 @@ def login_page(request): #проверяет авторизоыв ли поль�
         else: # если нет то ошибка
             messages.error(request, 'Ничего нет')
     context = {'page': page}
-    return redirect(request, 'studentpages/login.html', context) # в ином из всех случаях будет страница авторицации
+    return render(request, 'studentpages/login.html', context) # в ином из всех случаях будет страница авторицации
 
 def logout_user(request):
     logout(request)
@@ -44,10 +43,24 @@ def craete_ticket(request): # создает тикет с данными из �
             description=request.POST.get('description'),
         )
         context = {'form': form}
-        return redirect(request, 'support/ticket.html', context) # возвращает с контекстом данных
+        return render(request, 'support/ticket.html', context) # возвращает с контекстом данных
     else:
         return redirect(request, 'support/ticket.html') # возвращает на ту же страницу
 
-def craete_contract(request):
-    pass
-# Пока не будет внятной инфы какую информацию надо передать нифига не будет
+def craete_contract_page(request):
+    return redirect(request, 'support/contract.html')
+
+def create_primary_user(request):
+    form = PrimaryUserForm()
+    if request.method == 'POST':
+        User.objects.create(
+            name=request.POST.get('name'),
+            phone_number=request.POST.get('phone_number'),
+            email=request.POST.get('email'),
+            message=request.POST.get('message'),
+        )
+        return redirect(request, 'support/contract.html')
+    else:
+        context = {'form': form}
+        return render(request, 'support/contract.html', context)
+

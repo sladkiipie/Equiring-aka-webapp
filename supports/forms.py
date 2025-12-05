@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 
 from .models import SupporTicket
-from users.models import Contracts
+from users.models import Contracts, User
 
 
 class SupporTicketForm(ModelForm):
@@ -14,3 +14,7 @@ class ContractForm(ModelForm):
         model = Contracts
         fields = ['company', 'name', 'document']
 
+class PrimaryUserCheckForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['status']

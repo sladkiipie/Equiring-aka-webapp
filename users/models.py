@@ -27,12 +27,19 @@ class MyUserManager(BaseUserManager):
         return self.create_user(login, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
+    STATUS_CHOICES = (
+        ('approved', 'Approved'),
+        ('reject', 'Reject'),
+        ('pending', 'Pending'),
+    )
+
     login = models.CharField(max_length=255, unique=True, verbose_name='login')
     password = models.CharField(max_length=128) # паоль хешиоруется на стороке бекенда
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=15)
     email = models.CharField(max_length=255)
     message = models.TextField()
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='pending')
 
 
     is_staff = models.BooleanField(default=False)
@@ -56,10 +63,17 @@ class Companies(models.Model):
         return self.name
 
 class Contracts(models.Model):
+    STATUS_CHOICES = (
+        ('approved', 'Approved'),
+        ('reject', 'Reject'),
+        ('pending', 'Pending'),
+    )
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    company = models.UUIDField(ForeignKey(Companies, on_delete=models.CASCADE))
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     document = models.FileField(max_length=255)
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return self.name
