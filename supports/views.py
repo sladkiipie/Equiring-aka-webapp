@@ -13,9 +13,8 @@ def update_support_ticket(request): # изменяет статус тикета
         support_ticket = SupporTicket.objects.get(id=id)
         form = SupporTicketForm(instance=support_ticket)
         if request.method == "POST":
-            support_ticket.objects.update(
-                status=request.POST['status'],
-            )
+            if form.is_valid():
+                form.save()
             return redirect(request, 'support/ticket.html')
         else:
             context = {'form': form}
@@ -23,22 +22,21 @@ def update_support_ticket(request): # изменяет статус тикета
     except SupporTicket.DoesNotExist:
         messages.error(request, 'Support ticket not found.')
 
+
 def update_contract(request): # обновляет  информацию о контаркте ссылку на компанию, назывние контракта и файл документа
     try:
         contracts = Contracts.objects.get(id=id)
         form = UpdateContractForm(instance=contracts)
         if request.method == "POST":
-            Contracts.objects.update(
-                company=request.POST['company'],
-                name=request.POST['name'],
-                document=request.POST['document'],
-            )
+            if form.is_valid():
+                form.save()
             return redirect(request, 'support/contracts-list.html')
         else:
             context = {'form': form}
             return render(request, 'support/contracts-list.html', context)
     except Contracts.DoesNotExist:
         messages.error(request, 'Contract not found.')
+
 
 def primary_user_check(request):
     try:
@@ -55,6 +53,7 @@ def primary_user_check(request):
     except User.DoesNotExist:
         messages.error(request, 'User not found')
 
+
 def company_check(request):
     try:
         company = Companies.objects.get(id=id)
@@ -69,6 +68,7 @@ def company_check(request):
             return render(request, 'support/companies-list.html', context)
     except Companies.DoesNotExist:
         messages.error(request, 'Company not found')
+
 
 def contract_check(request):
     try:

@@ -31,6 +31,7 @@ def login_page(request): #проверяет авторизован ли пол�
     context = {'page': page}
     return render(request, 'studentpages/login.html', context)
 
+
 def logout_user(request):
     logout(request)
     return redirect('home') # выходит из аккаунта
@@ -38,43 +39,38 @@ def logout_user(request):
 def ticket_page(request):
     return redirect(request, 'ticket_page.html')
 
-def create_ticket(request): # создает тикет с данными из формы contract description
-    form = TicketForm()
+def create_ticket(request):# создает тикет с данными из формы contract description
     if request.method == 'POST':
-        SupporTicket.objects.create(
-            contract=request.POST.get('contract'),
-            description=request.POST.get('description'),
-        )
-        context = {'form': form}
-        return render(request, 'support/ticket.html', context)
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(request, 'support/ticket.html')
     else:
-        return redirect(request, 'support/ticket.html')
+        form = TicketForm()
+
+    return render(request, 'support/ticket.html', {'form': form})
+
 
 def contract_page(request):
     return redirect(request, 'support/contract.html') # страница контрактов
 
+
 def create_primary_user(request): # создание первичной заявки на консультацию на открытие эквайринга
-    form = PrimaryUserForm()
     if request.method == 'POST':
+        form = PrimaryUserForm(request.POST)
         if form.is_valid():
-            User.objects.create(
-                name=request.POST.get('name'),
-                phone_number=request.POST.get('phone_number'),
-                email=request.POST.get('email'),
-                message=request.POST.get('message'),
-            )
             form.save()
-            return redirect(request, 'support/contract.html')
+        return redirect(request, 'support/contract.html')
     else:
-        context = {'form': form}
-        return render(request, 'support/contract.html', context)
+        form = PrimaryUserForm()
+
+    return render(request, 'support/contract.html', {'form': form})
+
 
 def set_password_view(request, token): # страница создания аккаунта (логин и пароль)
     registration_token = get_object_or_404(RegistrationToken, token=token)
-
     if not registration_token.is_valid():
         return redirect('users/invalid_token.html')
-
     if request.method == 'POST':
         form = SetPasswordForm(registration_token.user)
         if form.is_valid():
@@ -85,43 +81,34 @@ def set_password_view(request, token): # страница создания ак�
             return redirect('home_page')
     else:
         form = SetPasswordForm(User)
-
     return render(request, "users/set_password.html", {'form': form})
 
+
 def create_contract(request):
-    contract_form = CreateContractForm()
-    company_form = CreateCompanyForm
     if request.method == 'POST':
+        contract_form = CreateContractForm(request.POST)
+        company_form = CreateCompanyForm(request.POST)
         if company_form.is_valid() and contract_form.is_valid():
-            Companies.objects.create(
-                INN=request.POST.get('INN'),
-                OGRN=request.POST.get('OGRN'),
-                name_company=request.POST.get('name_company'),
-            ),
-            company_form.save()
-            Contracts.objects.create(
-                name_contracts=request.POST.get('name_contracts'),
-            ),
             contract_form.save()
-
+            company_form.save()
         return redirect('create_contract_page')
-
     else:
-        context = {
-            "company_form": company_form,
-            "contract_form": contract_form,
-        }
-        return render(request, 'support/contract.html', context)
+        contract_form = CreateContractForm()
+        company_form = CreateCompanyForm()
+    context = {
+        "company_form": company_form,
+        "contract_form": contract_form,
+    }
+    return render(request, 'support/contract.html', context)
+
 
 def create_another_contract(request):
     form = CreateContractForm()
     if request.method == 'POST':
+        form = CreateContractForm(request.POST)
         if form.is_valid():
-            Contracts.objects.create(
-                name_contracts=request.POST.get('name_contracts'),
-            )
             form.save()
-            return redirect('create_contract_page')
+        return redirect('create_contract_page')
     else:
-        context = {"form": form}
-        return render(request, 'support/another_contract.html', context)
+        form = CreateContractForm()
+        return render(request, 'support/another_contract.html', {"form": form})
