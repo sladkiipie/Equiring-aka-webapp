@@ -9,10 +9,21 @@ class SupporTicketForm(ModelForm):
         model = SupporTicket
         fields = ['status']
 
-class ContractForm(ModelForm):
+class UpdateContractForm(ModelForm):
     class Meta:
         model = Contracts
         fields = ['company', 'name', 'document']
+
+class CheckContractForm(ModelForm):
+    class Meta:
+        model = Contracts
+        fields = ['status']
+
+
+class CheckCompanyForm(ModelForm):
+    class Meta:
+        model = Contracts
+        fields = []
 
 class PrimaryUserCheckForm(ModelForm):
     class Meta:

@@ -29,11 +29,11 @@ class MyUserManager(BaseUserManager):
         return self.create_user(login, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    STATUS_CHOICES = (
+    STATUS_CHOICES = [
         ('approved', 'Approved'),
         ('reject', 'Reject'),
         ('pending', 'Pending'),
-    )
+    ]
 
     login = models.CharField(max_length=255, unique=True, verbose_name='login')
     password = models.CharField(max_length=128) # паоль хешиоруется на стороке бекенда
@@ -65,30 +65,34 @@ class RegistrationToken(models.Model):
         return not self.used and timezone.now() < self.expires_at
 
 class Companies(models.Model):
+    STATUS_CHOICES = [
+
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     INN = models.BigIntegerField()
     OGRN = models.BigIntegerField()
-    name = models.CharField(max_length=255)
+    name_company = models.CharField(max_length=255)
     founder = models.ManyToManyField(User, related_name='company')
+    status = models.CharField
 
     def __str__(self):
-        return self.name
+        return self.name_company
 
 class Contracts(models.Model):
-    STATUS_CHOICES = (
+    STATUS_CHOICES = [
         ('approved', 'Approved'),
         ('reject', 'Reject'),
         ('pending', 'Pending'),
-    )
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    document = models.FileField(max_length=255)
-    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default='pending')
+    name_contract = models.CharField(max_length=255)
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default='pending') # документ должен быть в темплейтс или еще где будем просто вызывать док пользовательского соглашения  он одинаков для всех
 
     def __str__(self):
-        return self.name
+        return self.name_contract
 
 class Transactions(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

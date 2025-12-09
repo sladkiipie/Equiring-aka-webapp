@@ -4,15 +4,14 @@ from django.dispatch import receiver
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
 
-from .models import User, RegistrationToken
-
+from .models import User, RegistrationToken, Contracts
 
 
 def user_status_change(sender, instance, **kwargs): # функция изменения группы пользователей в зависимости от изменения статуса
-    GROUP_BY_STATUS = {
-        'approved': 'user_without_contract',
-        'rejected': 'deleted_user',
-    }
+    GROUP_BY_STATUS = [
+        ('approved', 'user_without_contract'),
+        ('rejected', 'deleted_user'),
+    ]
 
     if instance.status in GROUP_BY_STATUS: # проверка есть ли статус в словаре, и присвоение группы
         status = GROUP_BY_STATUS[instance.status]
