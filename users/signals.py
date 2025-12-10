@@ -7,7 +7,18 @@ from django.core.mail import send_mail
 from .models import User, RegistrationToken, Contracts
 
 
-def user_status_change(sender, instance, **kwargs): # функция изменения группы пользователей в зависимости от изменения статуса
+@receiver(post_save, sender=User) # триггер на изменение статуса пользователя
+def track_user_status_change(sender, instance, created, update_fields=None, **kwargs):
+    if created:
+        return
+
+    if update_fields and 'status' not in update_fields:
+        return
+
+    user_status_change(instance)
+
+
+def user_status_change(instance): # функция изменения группы пользователей в зависимости от изменения статуса
     GROUP_BY_STATUS = [
         ('approved', 'user_without_contract'),
         ('rejected', 'deleted_user'),
@@ -32,15 +43,6 @@ def user_status_change(sender, instance, **kwargs): # функция измен�
 
 
 
-@receiver(post_save, sender=User) # триггер на изменение статуса пользователя
-def track_user_status_change(sender, instance, created, update_fields=None, **kwargs):
-    if created:
-        return
-
-    if update_fields and 'status' not in update_fields:
-        return
-
-    user_status_change(instance, instance.status)
 
 
 

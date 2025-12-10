@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 
 
@@ -8,81 +8,90 @@ from .models import SupporTicket
 from users.models import Contracts, User, Companies
 
 
-def update_support_ticket(request): # изменяет статус тикета
-    try:
-        support_ticket = SupporTicket.objects.get(id=id)
+def update_support_ticket(request, id):  # изменяет статус тикета
+
+    support_ticket = get_object_or_404(SupporTicket, id=id)
+
+    if request.method == "POST":
+        form = SupporTicketForm(request.POST, instance=support_ticket)
+
+        if form.is_valid():
+            form.save()
+            return redirect('support/ticket.html')
+    else:
         form = SupporTicketForm(instance=support_ticket)
-        if request.method == "POST":
-            if form.is_valid():
-                form.save()
-            return redirect(request, 'support/ticket.html')
-        else:
-            context = {'form': form}
-            return render(request, 'support/ticket.html', context)
-    except SupporTicket.DoesNotExist:
-        messages.error(request, 'Support ticket not found.')
+
+    context = {'form': form}
+    return render(request, 'support/ticket.html', context)
 
 
-def update_contract(request): # обновляет  информацию о контаркте ссылку на компанию, назывние контракта и файл документа
-    try:
-        contracts = Contracts.objects.get(id=id)
+def update_contract(request, id):  # обновляет  информацию о контаркте ссылку на компанию, назывние контракта и файл документа
+
+    contracts = get_object_or_404(Contracts, id=id)
+
+    if request.method == "POST":
+        form = UpdateContractForm(request.POST, instance=contracts)
+
+        if form.is_valid():
+            form.save()
+            return redirect('support/contracts.html')
+    else:
         form = UpdateContractForm(instance=contracts)
-        if request.method == "POST":
+
+    context = {'form': form}
+    return render(request, 'support/contracts.html', context)
+
+
+def primary_user_check(request, id):
+
+        primary_user = get_object_or_404(User, id=id)
+
+        if request.method == 'POST':
+            form = PrimaryUserCheckForm(instance=primary_user)
+
             if form.is_valid():
                 form.save()
-            return redirect(request, 'support/contracts-list.html')
+                return redirect('support/users-list.html')
+
         else:
-            context = {'form': form}
-            return render(request, 'support/contracts-list.html', context)
-    except Contracts.DoesNotExist:
-        messages.error(request, 'Contract not found.')
+            form = PrimaryUserCheckForm(instance=primary_user)
+
+        context = {'form': form}
+        return render(request, 'support/users-list.html', context)
 
 
-def primary_user_check(request):
-    try:
-        primary_user = User.objects.get(id=id)
-        form = PrimaryUserCheckForm(instance=primary_user)
+def company_check(request, id):
+
+        company = get_object_or_404(Companies, id=id)
+
         if request.method == 'POST':
-            User.objects.update(
-                status=request.POST['status'],
-            )
-            return redirect(request, 'support/users-list.html')
-        else:
-            context = {'form': form}
-            return render(request, 'support/users-list.html', context)
-    except User.DoesNotExist:
-        messages.error(request, 'User not found')
 
+            form = CheckCompanyForm(request.POST, instance=company)
+            if form.is_valid():
+                form.save()
+                return redirect('support/companies-list.html')
 
-def company_check(request):
-    try:
-        company = Companies.objects.get(id=id)
-        form = CheckCompanyForm(instance=company)
-        if request.method == 'POST':
-            Companies.objects.update(
-                status=request.POST['status'],
-            )
-            return redirect(request, 'support/companies-list.html')
         else:
-            context = {'form': form}
-            return render(request, 'support/companies-list.html', context)
-    except Companies.DoesNotExist:
-        messages.error(request, 'Company not found')
+            form = CheckCompanyForm(instance=company)
+
+        context = {'form': form}
+        return render(request, 'support/companies-list.html', context)
+
 
 
 def contract_check(request):
-    try:
-        contract = Contracts.objects.get(id=id)
-        form = CheckContractForm(instance=contract)
+
+        contract = get_object_or_404(Contracts, id=request.POST.get('id'))
+
         if request.method == 'POST':
+
+            form = CheckContractForm(request.POST, instance=contract)
             if form.is_valid():
-                Contracts.objects.update(
-                    status=request.POST['status'],
-                ),
                 form.save()
-                return redirect(request, 'support/contracts-list.html')
+                return redirect('support/contracts-list.html')
+
         else:
-            context = {'form': form}
-            return render(request, 'support/contracts-list.html', context)
-    except Contracts.DoesNotExist:
-        messages.error(request, 'Contract not found')
+            form = CheckContractForm(instance=contract)
+
+        context = {'form': form}
+        return render(request, 'support/contracts-list.html', context)

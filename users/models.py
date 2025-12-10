@@ -54,11 +54,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.login
 
+def token_expired_at():
+    return timezone.now() + timezone.timedelta(hours=24)
+
 class RegistrationToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(default=lambda: timezone.now() + timedelta(hours=24))
+    expires_at = models.DateTimeField(default=token_expired_at)
     used = models.BooleanField(default=False)
 
     def is_valid(self):

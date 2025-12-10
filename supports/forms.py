@@ -12,7 +12,7 @@ class SupporTicketForm(ModelForm):
 class UpdateContractForm(ModelForm):
     class Meta:
         model = Contracts
-        fields = ['company', 'name', 'document']
+        fields = ['company', 'name_contract']
 
 class CheckContractForm(ModelForm):
     class Meta:
