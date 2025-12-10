@@ -1,0 +1,33 @@
+
+
+
+.container {
+  max-width: 120rem;
+  width: 90%;
+  margin: auto;
+}
+
+/* кнопки */
+.btn_grid{
+
+
+}   
+
+/* контракт */
+.contract_layout{
+
+    background-color: aquamarine;
+}
+
+
+.btn{
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+/* сапорты */
+
+.supports_grid {
+
+
+}

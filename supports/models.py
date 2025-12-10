@@ -14,12 +14,16 @@ def user_directory_path(instance, filename):
     return f"user_{instance.uploaded_by.pk}/{filename}"
 
 class SupporTicket(models.Model):
+    STATUS_CHOICES = [     # Выбор статуса. По примеру сделать контракт со следующими переменными: НА РАССМОТРЕНИИ, ПРИНЯТ, ОТКАЗАНО!
+        ('opened', 'Открыт'),
+        ('closed', 'Закрыт'),
+        ('closedbyuser', 'Клиент отозвал'),]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     contract = models.ForeignKey(Contracts, related_name='contract', blank=True,on_delete=models.CASCADE)
     responsible_id = models.ForeignKey(User, related_name='supporter', blank=True,on_delete=models.CASCADE)
     asker_id = models.ForeignKey(User, related_name='asker', blank=True,on_delete=models.CASCADE)
     description = models.TextField()
-    status = models.CharField(max_length=255)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='opened')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
