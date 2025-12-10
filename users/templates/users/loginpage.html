@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+
+{% block content %}
+=======
+{% if page == 'loginpage' %}
+>>>>>>> Stashed changes
+
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        <label>Логин:</label>
+        <input type="text" name="username" placeholder=" " />
+
+        <label>Пароль:</label>
+        <input type="password" name="password" placeholder=" " />
+
+        <input type="submit" value="Login" />
+    </form>
+
+<<<<<<< Updated upstream
+{% endblock %}
