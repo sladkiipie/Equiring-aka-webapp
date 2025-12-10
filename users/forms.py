@@ -1,9 +1,11 @@
 from django.forms import ModelForm
+from django.contrib.auth.forms import SetPasswordForm
 
-from supports.models import SupporTicket, Contracts
-from .models import User
+from supports.models import SupporTicket
+from .models import User, Contracts, Companies
 
-class UserForm(ModelForm):
+
+class PrimaryUserForm(ModelForm):
     class Meta:
         model = User
         fields = ['name','email', 'phone_number', 'message']
@@ -13,7 +15,12 @@ class TicketForm(ModelForm):
         model = SupporTicket()
         fields = ['contract', 'description']
 
-class ContractForm(ModelForm):
+class CreateCompanyForm(ModelForm):
+    class Meta:
+        model = Companies
+        fields = ['INN', 'OGRN', 'name_company']
+
+class CreateContractForm(ModelForm):
     class Meta:
         model = Contracts
-        fields = ['company', 'name', 'document']
+        fields = ['name_contract']
