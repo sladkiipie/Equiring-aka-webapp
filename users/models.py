@@ -34,6 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.CharField(max_length=255)
     message = models.TextField()
 
+
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -58,7 +59,7 @@ class Contracts(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.UUIDField(ForeignKey(Companies, on_delete=models.CASCADE))
     name = models.CharField(max_length=255)
-    documment = models.CharField(max_length=255)
+    document = models.FileField(max_length=255)
 
     def __str__(self):
         return self.name
