@@ -103,7 +103,6 @@ def create_contract(request):
 
 
 def create_another_contract(request):
-    form = CreateContractForm()
     if request.method == 'POST':
         form = CreateContractForm(request.POST)
         if form.is_valid():
