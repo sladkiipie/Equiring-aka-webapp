@@ -9,7 +9,7 @@ from .forms import TicketForm, PrimaryUserForm, SetPasswordForm, CreateContractF
 
 
 def home_page(request):
-    return redirect(request, 'support/home.html')
+    return redirect(request, 'users/userhome.html')
 
 def login_page(request): #проверяет авторизован ли пользователь, если да то пропускает на главную страницу, если нет то открывает страницу авторизации
     page = 'login'
