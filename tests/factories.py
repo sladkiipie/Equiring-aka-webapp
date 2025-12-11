@@ -4,7 +4,7 @@ from factory import SubFactory
 from factory import Sequence
 from factory.django import DjangoModelFactory
 from faker import Faker
-from supports.models import DialogsModel, MessageModel
+from supports.models import SupporTicket, TicketMessage
 from users.models import User
 
 
@@ -28,24 +28,24 @@ class UserFactory(DjangoModelFactory):
     is_staff = Iterator([True, False])
     is_active = Iterator([True, False])
 
-class DialogsModelFactory(DjangoModelFactory):
+class SupporTicketFactory(DjangoModelFactory):
     class Meta:
-        model = DialogsModel
+        model = SupporTicket
 
-    user1 = SubFactory(UserFactory)
-    user2 = SubFactory(UserFactory)
+    asker_id = SubFactory(UserFactory)
+    responsible_id = SubFactory(UserFactory)
 
     def __str__(self):
         return f"Dialog between {self.user1}, {self.user2}"
 
 
-class MessageModelFactory(DjangoModelFactory):
+class TicketMessageFactory(DjangoModelFactory):
     class Meta:
-        model = MessageModel
+        model = TicketMessage
 
     # is_removed = Iterator([True, False])
-    asker_id = SubFactory(UserFactory)
-    responsible_id = SubFactory(UserFactory)
+    sender_id = SubFactory(UserFactory)
+    recipient_id = SubFactory(UserFactory)
     text = LazyAttribute(lambda x: faker.paragraph(nb_sentences=3, variable_nb_sentences=True))
     file = LazyAttribute(lambda x: None)
     read = Iterator([True, False])
