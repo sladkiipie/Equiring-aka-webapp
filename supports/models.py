@@ -29,9 +29,9 @@ class SupporTicket(TimeStampedModel):
         ('closedbyuser', 'Клиент отозвал'),
     ]
     id = models.BigAutoField(primary_key=True, verbose_name="id")
-    asker_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="User1",
+    asker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Asker",
                               related_name="+", db_index=True)
-    responsible_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="User2",
+    responsible = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Responsible",
                               related_name="+", db_index=True)
     contract = models.ForeignKey(Contracts, related_name="contract", on_delete=models.CASCADE)
     description = models.TextField()
@@ -40,8 +40,8 @@ class SupporTicket(TimeStampedModel):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['user1', 'user2'], name="unique_dialogs"),
-            models.UniqueConstraint(fields=['user2', 'user1'], name="unique_dialogs_reversed")
+            models.UniqueConstraint(fields=['asker_id', 'responsible_id'], name="unique_dialogs"),
+            models.UniqueConstraint(fields=['responsible_id', 'asker_id'], name="unique_dialogs_reversed")
         ]
         verbose_name = "Dialogs"
         verbose_name_plural = "Dialogs"
@@ -51,23 +51,24 @@ class SupporTicket(TimeStampedModel):
 
     @staticmethod
     def dialog_exists(u1: User, u2: User) -> Optional[Any]:
-        return SupporTicket.objects.filter(Q(user1=u1, user2=u2) | Q(user2=u2, user1=u1)).first()
+        return SupporTicket.objects.filter(Q(asker=u1, responsible=u2) | Q(responsible=u2, asker=u1)).first()
 
     @staticmethod
-    def create_if_not_exists(u1: User, u2: User): # Попробовать указать модель User если не будет рабоать
+    def create_if_not_exists(u1: User, u2: User, contract: Contracts): # Попробовать указать модель User если не будет рабоать
         res = SupporTicket.dialog_exists(u1, u2)
         if not res:
-            SupporTicket.objects.create(user1=u1, user2=u2)
+            SupporTicket.objects.create(asker=u1, responsible=u2, contract=contract)
 
     @staticmethod
     def get_dialogs_for_user(user: User): # Попробовать указать модель User если не будет рабоать
-        return SupporTicket.objects.filter(Q(user1=user) | Q(user2=user)).values_list('user1_id', 'user2_id')
+        return SupporTicket.objects.filter(Q(asker=user) | Q(responsible=user)).values_list('asker_id', 'responsible_id')
 
 class TicketMessage(TimeStampedModel, SoftDeletableModel):
     id = models.BigAutoField(primary_key=True, verbose_name="id")
+    ticket = models.ForeignKey(SupporTicket, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author",
                                related_name="from_user", db_index=True)
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Responsible",
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Recipient",
                                   related_name="to_user", db_index=True)
     text = models.TextField(verbose_name="Text", blank=True)
     file = models.ForeignKey(UploadedFile, related_name='message',  on_delete=models.DO_NOTHING,
@@ -87,10 +88,6 @@ class TicketMessage(TimeStampedModel, SoftDeletableModel):
 
     def __str__(self):
         return str(self.pk)
-
-    def save(self, *args, **kwargs):
-        super(TicketMessage, self).save(*args, **kwargs)
-        SupporTicket.create_if_not_exists(self.sender, self.recipient)
 
     class Meta:
         ordering = ('-created',)

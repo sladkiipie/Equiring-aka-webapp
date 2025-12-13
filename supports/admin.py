@@ -1,8 +1,9 @@
 from django.contrib import admin
 
-from supports.models import SupporTicket, SupportMessage
+from supports.models import SupporTicket, TicketMessage, UploadedFile
 
 supports_models = [
     admin.site.register(SupporTicket),
-    admin.site.register(SupportMessage)
+    admin.site.register(TicketMessage),
+    admin.site.register(UploadedFile),
 ]

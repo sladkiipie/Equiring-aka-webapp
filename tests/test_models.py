@@ -36,18 +36,18 @@ class MessageAndDialogModelTests(TestCase):
 
     def test_str_dialog(self):
         u1, u2 = UserFactory.create(), UserFactory.create()
-        dialog = SupporTicketFactory.create(user1=u1, user2=u2)
+        dialog = SupporTicketFactory.create(asker=u1, responsible=u2)
         self.assertEqual(str(dialog), f"Dialogs beetwen {u1.login} {u2.login}")
 
     def test_dialog_unique(self):
         u1, u2 = UserFactory.create(), UserFactory.create()
-        SupporTicketFactory.create(user1=u1, user2=u2)
-        SupporTicketFactory.create(user1=u2, user2=u1)
-        self.assertRaises(IntegrityError, SupporTicketFactory.create, user2=u1, user1=u2)
+        SupporTicketFactory.create(asker=u1, responsible=u2)
+        SupporTicketFactory.create(asker=u2, responsible=u1)
+        self.assertRaises(IntegrityError, SupporTicketFactory.create, responsible=u1, asker=u2)
 
     def test_get_dialogs_for_user(self):
         u1, u2 = UserFactory.create(), UserFactory.create()
-        SupporTicketFactory.create(user1=u1, user2=u2)
+        SupporTicketFactory.create(asker=u1, responsible=u2)
         d = SupporTicket.get_dialogs_for_user(user=u1).first()
         d2 = SupporTicket.get_dialogs_for_user(user=u2).first()
         self.assertEqual(d, d2)
@@ -104,7 +104,7 @@ class TestCaseSupporTicketGenerated(TestCase):
         """
         dialogs_model = SupporTicketFactory.create()
         dialogs_model_dict = model_to_dict(dialogs_model)
-        self.assertEqual(len(dialogs_model_dict.keys()), 3)
+        self.assertEqual(len(dialogs_model_dict.keys()), 6)
 
     def test_attribute_content(self):
         """
@@ -114,8 +114,8 @@ class TestCaseSupporTicketGenerated(TestCase):
         self.assertIsNotNone(dialogs_model.created)
         self.assertIsNotNone(dialogs_model.modified)
         self.assertIsNotNone(dialogs_model.id)
-        self.assertIsNotNone(dialogs_model.user1)
-        self.assertIsNotNone(dialogs_model.user2)
+        self.assertIsNotNone(dialogs_model.asker)
+        self.assertIsNotNone(dialogs_model.responsible)
 
 
 class TestCaseTicketMessageGenerated(TestCase):
@@ -146,7 +146,7 @@ class TestCaseTicketMessageGenerated(TestCase):
         """
         message_model = TicketMessageFactory.create()
         message_model_dict = model_to_dict(message_model)
-        self.assertEqual(len(message_model_dict.keys()), 7)
+        self.assertEqual(len(message_model_dict.keys()), 8 )
 
     def test_attribute_content(self):
         """
@@ -157,8 +157,8 @@ class TestCaseTicketMessageGenerated(TestCase):
         self.assertIsNotNone(message_model.modified)
         self.assertIsNotNone(message_model.is_removed)
         self.assertIsNotNone(message_model.id)
-        self.assertIsNotNone(message_model.asker_id)
-        self.assertIsNotNone(message_model.responsible_id)
+        self.assertIsNotNone(message_model.sender_id)
+        self.assertIsNotNone(message_model.recipient_id)
         self.assertIsNotNone(message_model.text)
         self.assertIsNone(message_model.file)
         self.assertIsNotNone(message_model.read)
