@@ -1,17 +1,11 @@
 from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib import messages
+
 
 from .forms import SupporTicketForm, PrimaryUserCheckForm, UpdateContractForm, CheckCompanyForm, CheckContractForm
 from .models import SupporTicket
 
 from users.models import Contracts, User, Companies
-
-
-
-
-def ticket_chat(request):
-    objects = SupporTicket.objects.all()
-    context = {'objects': objects,}
-    return render(request, 'support/ticket_chat.html', context)
 
 
 def update_support_ticket(request, id):  # изменяет статус тикета
