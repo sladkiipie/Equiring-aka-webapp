@@ -7,12 +7,12 @@ from .forms import TicketForm, PrimaryUserForm, SetPasswordForm, CreateContractF
 
 
 def guest_page(request):
-    return render(request, 'users/guest_page.html')
+    return render(request, 'users/mainpage.html')
 
 def login_page(request): #проверяет авторизован ли пользователь, если да то пропускает на главную страницу, если нет то открывает страницу авторизации
     page = 'login'
     if request.user.is_authenticated:
-        return redirect('userhome')
+        return redirect('userhome.html')
     if request.method == 'POST':
         uslog = request.POST.get('login')
         password = request.POST.get('password')
@@ -23,22 +23,22 @@ def login_page(request): #проверяет авторизован ли пол�
         user = authenticate(request, login=uslog, password=password)
         if user is not None:
             login(request, user)
-            return redirect('userhome')
+            return redirect('userhome.html')
         else: # если нет то ошибка
             messages.error(request, 'Ничего нет')
     context = {'page': page}
-    return render(request, 'loginpage', context)
+    return render(request, 'loginpage.html', context)
 
 def create_primary_user(request): # создание первичной заявки на консультацию на открытие эквайринга
     if request.method == 'POST':
         form = PrimaryUserForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect(request, 'support/contract.html')
+        return redirect(request, 'support/mainpage.html')
     else:
         form = PrimaryUserForm()
 
-    return render(request, 'support/contract.html', {'form': form})
+    return render(request, 'support/mainpage.html', {'form': form})
 
 def set_password_view(request, token): # страница создания аккаунта (логин и пароль)
     registration_token = get_object_or_404(RegistrationToken, token=token)
@@ -51,7 +51,7 @@ def set_password_view(request, token): # страница создания ак�
             registration_token.used = True
             registration_token.save()
             login(request, registration_token.user)
-            return redirect('home_page')
+            return redirect('loginpage.html')
     else:
         form = SetPasswordForm(User)
     return render(request, "users/set_password.html", {'form': form})
@@ -75,7 +75,7 @@ def create_contract(request):
         contract_form = CreateContractForm(request.POST)
         if contract_form.is_valid():
             contract_form.save()
-        return redirect('create_contract_page')
+        return redirect('contracts.html')
     else:
         contract_form = CreateContractForm()
     context = {"contract_form": contract_form,}
@@ -110,4 +110,4 @@ def create_ticket(request):# создает тикет с данными из ф
     else:
         form = TicketForm()
 
-    return render(request, 'support/ticket.html', {'form': form})
+    return render(request, 'support/tickets.html', {'form': form})

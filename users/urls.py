@@ -8,7 +8,7 @@ urlpatterns = [
     path('', views.guest_page, name='guestpage'), # Домка
 
     path('create-primary-user', views.create_primary_user, name='create-primary-user'),
-    path('set-password/<uuid:token>', views.set_password_view, name='login_reg'),
+    path('set-password/<uuid:token>', views.set_password_view, name='password'),
 
     path('login/', views.login_page, name='loginpage'),
     path('logout/', views.logout, name='logout'),
