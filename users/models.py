@@ -70,7 +70,10 @@ class RegistrationToken(models.Model):
 
 class Companies(models.Model):
     STATUS_CHOICES = [
-
+        ('approved', 'Approved'),
+        ('reject', 'Reject'),
+        ('pending', 'Pending'),
+        ('freeze', 'Freeze'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -78,7 +81,7 @@ class Companies(models.Model):
     OGRN = models.BigIntegerField()
     name_company = models.CharField(max_length=255)
     founder = models.ManyToManyField(User, related_name='company')
-    status = models.CharField
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return self.name_company

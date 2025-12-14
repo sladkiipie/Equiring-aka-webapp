@@ -12,7 +12,7 @@ class PrimaryUserForm(ModelForm):
 
 class TicketForm(ModelForm):
     class Meta:
-        model = SupporTicket()
+        model = SupporTicket
         fields = ['contract', 'description']
 
 class CreateCompanyForm(ModelForm):
