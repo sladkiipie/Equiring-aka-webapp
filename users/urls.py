@@ -9,3 +9,4 @@ urlpatterns = [
     path('tickets/', views.ticket_page, name='tickets'), # Тикеты юзера - СПИСОК
     path('set-passord/<uuid:token>', set_password_view, name='set_password'),
 ]
+

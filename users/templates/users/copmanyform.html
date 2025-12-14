@@ -1,0 +1,16 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<main class="companyform">
+    <div>
+        <form class="form" action="" method="POST">
+          {% csrf_token %}
+
+          <div class="form__company">
+            <label for="company_name">Название компании:</label>
+            <input type="text" name="company_name" required>
+          </div>
+    </div>
+</main>
+{% endblock %}
