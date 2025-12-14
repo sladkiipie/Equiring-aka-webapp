@@ -1,20 +1,19 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from supports.models import SupporTicket
-from .models import User, RegistrationToken, Contracts, Companies
+from .models import User, RegistrationToken
 from .forms import TicketForm, PrimaryUserForm, SetPasswordForm, CreateContractForm, CreateCompanyForm
 
 
 
 
 def home_page(request):
-    return redirect(request, 'users/userhome.html')
+    return render(request, 'users/userhome.html')
 
 def login_page(request): #проверяет авторизован ли пользователь, если да то пропускает на главную страницу, если нет то открывает страницу авторизации
     page = 'login'
     if request.user.is_authenticated:
-        return redirect('home')
+        return redirect('userhome')
     if request.method == 'POST':
         uslog = request.POST.get('login')
         password = request.POST.get('password')
@@ -25,11 +24,11 @@ def login_page(request): #проверяет авторизован ли пол�
         user = authenticate(request, login=uslog, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('userhome')
         else: # если нет то ошибка
             messages.error(request, 'Ничего нет')
     context = {'page': page}
-    return render(request, 'studentpages/login.html', context)
+    return render(request, 'loginpage', context)
 
 
 def logout_user(request):
@@ -37,14 +36,16 @@ def logout_user(request):
     return redirect('home') # выходит из аккаунта
 
 def ticket_page(request):
-    return redirect(request, 'ticket_page.html')
+    return render(request, 'users/tickets.html')
+
+
 
 def create_ticket(request):# создает тикет с данными из формы contract description
     if request.method == 'POST':
         form = TicketForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(request, 'support/ticket.html')
+            return redirect(request, 'support/tickets.html')
     else:
         form = TicketForm()
 
@@ -52,8 +53,10 @@ def create_ticket(request):# создает тикет с данными из ф
 
 
 def contract_page(request):
-    return redirect(request, 'support/contract.html') # страница контрактов
+    return render(request, 'users/contracts.html') # страница контрактов
 
+def contractform_page(request):
+    return render(request, 'users/contractform.html')
 
 def create_primary_user(request): # создание первичной заявки на консультацию на открытие эквайринга
     if request.method == 'POST':
@@ -99,7 +102,7 @@ def create_contract(request):
         "company_form": company_form,
         "contract_form": contract_form,
     }
-    return render(request, 'support/contract.html', context)
+    return render(request, 'users/contracts.html', context)
 
 
 def create_another_contract(request):
