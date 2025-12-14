@@ -53,26 +53,26 @@ class MessageAndDialogModelTests(TestCase):
         self.assertEqual(d, d2)
 
     def test_get_unread_count_for_dialog_with_user(self):
-        asker_id, responsible_id = UserFactory.create(), UserFactory.create()
+        sender_id, recipient_id = UserFactory.create(), UserFactory.create()
         num_unread = faker.random.randint(1, 20)
-        _ = TicketMessageFactory.create_batch(num_unread, read=False, asker_id=asker_id, responsible_id=responsible_id)
+        _ = TicketMessageFactory.create_batch(num_unread, read=False, sender=sender_id, recipient=recipient_id)
 
-        self.assertEqual(TicketMessage.get_unread_count_for_dialog_with_user(asker_id, responsible_id), num_unread)
+        self.assertEqual(TicketMessage.get_unread_count_for_dialog_with_user(sender_id, recipient_id), num_unread)
 
     def test_get_last_message_for_dialog(self):
-        asker_id, responsible_id = UserFactory.create(), UserFactory.create()
-        last_message = TicketMessageFactory.create(asker_id=asker_id, responsible_id=responsible_id)
+        sender_id, recipient_id = UserFactory.create(), UserFactory.create()
+        last_message = TicketMessageFactory.create(sender=sender_id, recipient=recipient_id)
 
-        last_message1 = TicketMessage.get_last_message_for_dialog(asker_id, responsible_id)
-        last_message2 = TicketMessage.get_last_message_for_dialog(responsible_id, asker_id)
+        last_message1 = TicketMessage.get_last_message_for_dialog(sender_id, recipient_id)
+        last_message2 = TicketMessage.get_last_message_for_dialog(recipient_id, sender_id)
 
         self.assertEqual(last_message, last_message1)
         self.assertEqual(last_message, last_message2)
 
     def test_save_creates_dialog_if_not_exists(self):
         before = SupporTicket.objects.count()
-        asker_id, responsible_id = UserFactory.create(), UserFactory.create()
-        TicketMessageFactory.create(asker_id=asker_id, responsible_id=responsible_id)
+        sender_id, recipient_id = UserFactory.create(), UserFactory.create()
+        TicketMessageFactory.create(sender=sender_id, recipient=recipient_id)
         after = SupporTicket.objects.count()
         self.assertEqual(after, before + 1)
 

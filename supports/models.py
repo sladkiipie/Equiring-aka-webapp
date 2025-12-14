@@ -40,14 +40,14 @@ class SupporTicket(TimeStampedModel):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['asker_id', 'responsible_id'], name="unique_dialogs"),
-            models.UniqueConstraint(fields=['responsible_id', 'asker_id'], name="unique_dialogs_reversed")
+            models.UniqueConstraint(fields=['asker', 'responsible'], name="unique_dialogs"),
+            models.UniqueConstraint(fields=['responsible', 'asker'], name="unique_dialogs_reversed")
         ]
         verbose_name = "Dialogs"
         verbose_name_plural = "Dialogs"
 
     def __str__(self):
-        return _("Dialogs beetwen ") + f"{self.asker_id} {self.responsible_id}"
+        return _("Dialogs beetwen ") + f"{self.asker} {self.responsible}"
 
     @staticmethod
     def dialog_exists(u1: User, u2: User) -> Optional[Any]:
@@ -61,7 +61,7 @@ class SupporTicket(TimeStampedModel):
 
     @staticmethod
     def get_dialogs_for_user(user: User): # Попробовать указать модель User если не будет рабоать
-        return SupporTicket.objects.filter(Q(asker=user) | Q(responsible=user)).values_list('asker_id', 'responsible_id')
+        return SupporTicket.objects.filter(Q(asker=user) | Q(responsible=user)).values_list('asker', 'responsible')
 
 class TicketMessage(TimeStampedModel, SoftDeletableModel):
     id = models.BigAutoField(primary_key=True, verbose_name="id")
@@ -84,7 +84,7 @@ class TicketMessage(TimeStampedModel, SoftDeletableModel):
     def get_last_message_for_dialog(sender, recipient):
         return TicketMessage.objects.filter(
             Q(sender_id=sender, recipient_id=recipient) | Q(sender_id=recipient, recipient=sender)) \
-            .select_related('sender_id', 'recipient_id').first()
+            .select_related('sender', 'recipient').first()
 
     def __str__(self):
         return str(self.pk)
