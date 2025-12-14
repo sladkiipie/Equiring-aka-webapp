@@ -6,9 +6,8 @@ from .forms import TicketForm, PrimaryUserForm, SetPasswordForm, CreateContractF
 
 
 
-
-def home_page(request):
-    return render(request, 'users/userhome.html')
+def guest_page(request):
+    return render(request, 'users/guest_page.html')
 
 def login_page(request): #проверяет авторизован ли пользователь, если да то пропускает на главную страницу, если нет то открывает страницу авторизации
     page = 'login'
@@ -30,34 +29,6 @@ def login_page(request): #проверяет авторизован ли пол�
     context = {'page': page}
     return render(request, 'loginpage', context)
 
-
-def logout_user(request):
-    logout(request)
-    return redirect('home') # выходит из аккаунта
-
-def ticket_page(request):
-    return render(request, 'users/tickets.html')
-
-
-
-def create_ticket(request):# создает тикет с данными из формы contract description
-    if request.method == 'POST':
-        form = TicketForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(request, 'support/tickets.html')
-    else:
-        form = TicketForm()
-
-    return render(request, 'support/ticket.html', {'form': form})
-
-
-def contract_page(request):
-    return render(request, 'users/contracts.html') # страница контрактов
-
-def contractform_page(request):
-    return render(request, 'users/contractform.html')
-
 def create_primary_user(request): # создание первичной заявки на консультацию на открытие эквайринга
     if request.method == 'POST':
         form = PrimaryUserForm(request.POST)
@@ -68,7 +39,6 @@ def create_primary_user(request): # создание первичной заяв
         form = PrimaryUserForm()
 
     return render(request, 'support/contract.html', {'form': form})
-
 
 def set_password_view(request, token): # страница создания аккаунта (логин и пароль)
     registration_token = get_object_or_404(RegistrationToken, token=token)
@@ -87,30 +57,57 @@ def set_password_view(request, token): # страница создания ак�
     return render(request, "users/set_password.html", {'form': form})
 
 
+
+def home_page(request):
+    return render(request, 'users/userhome.html')
+
+def logout_user(request):
+    logout(request)
+    return redirect('home') # выходит из аккаунта
+
+
+
+def contract_page(request):
+    return render(request, 'users/contracts.html') # страница контрактов
+
 def create_contract(request):
     if request.method == 'POST':
         contract_form = CreateContractForm(request.POST)
-        company_form = CreateCompanyForm(request.POST)
-        if company_form.is_valid() and contract_form.is_valid():
+        if contract_form.is_valid():
             contract_form.save()
-            company_form.save()
         return redirect('create_contract_page')
     else:
         contract_form = CreateContractForm()
-        company_form = CreateCompanyForm()
-    context = {
-        "company_form": company_form,
-        "contract_form": contract_form,
-    }
+    context = {"contract_form": contract_form,}
     return render(request, 'users/contracts.html', context)
 
 
-def create_another_contract(request):
+
+def company_page(request):
+    return render(request, 'users/companies.html')
+
+def create_company(request):
     if request.method == 'POST':
-        form = CreateContractForm(request.POST)
+        form = CreateCompanyForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect('create_contract_page')
+        return redirect('users/contracts.html')
     else:
-        form = CreateContractForm()
-        return render(request, 'support/another_contract.html', {"form": form})
+        form = CreateCompanyForm()
+        return render(request, 'users/companyform.html', {"form": form})
+
+
+
+def ticket_page(request):
+    return render(request, 'users/tickets.html')
+
+def create_ticket(request):# создает тикет с данными из формы contract description
+    if request.method == 'POST':
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(request, 'support/tickets.html')
+    else:
+        form = TicketForm()
+
+    return render(request, 'support/ticket.html', {'form': form})
