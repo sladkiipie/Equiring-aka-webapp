@@ -1,7 +1,13 @@
 {% extends 'main.html' %}
 {% block content %}
-<div>
-        <li><a href="{% url 'contracts' %}">Контракты</a></li>
-        <li><a href="{% url 'tickets' %}">Обращения в поддержку</a></li>
-</div>
+<main class="homepage">
+        <div>
+                <div>
+                        <div>
+                                <li><a href="{% url 'contracts' %}">Контракты</a></li>
+                                <li><a href="{% url 'tickets' %}">Обращения в поддержку</a></li>
+                        </div>
+                </div>
+        </div>
+</main class="homepage">
 {% endblock content%}

@@ -7,14 +7,14 @@
   margin: auto;
 }
 
-/* кнопки */
+
 .btn_grid{
 
 
 }   
 
-/* контракт */
-.contract_layout{
+/* контракты */
+.contractform_layout{
 
     background-color: aquamarine;
 }
@@ -25,9 +25,9 @@
   border-radius: 5px;
 }
 
-/* сапорты */
+/* сапортытикеты */
 
-.supports_grid {
+.supportsform_layout {
 
 
 }

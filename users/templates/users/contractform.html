@@ -2,10 +2,14 @@
 
 {% block content %}
 
- <form method="POST" action="">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Submit" />
-    </form>
+<main class="contractform">
+    <div>
+         <form method="POST" action="">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Submit" />
+            </form>
+    </div>
 
+</main>
 {% endblock %}

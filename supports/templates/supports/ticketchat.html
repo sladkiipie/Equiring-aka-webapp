@@ -1,38 +1,38 @@
 {% extends 'main.html' %}
 
 {% block content %}
-{% block content %}
-        <h1>{{supportticket.name}}</h1>
-
-
-        <div class="message-form">
-            <form method="POST" action="">
-                {% csrf_token %}
-                <input type="text" name="body" placeholder="Пиши" />
-            </form>
-        </div>
-        {% endif %}
-
-    </div>
-
-    <div>
-        <h3>Чат</h3>
-     
-
-        {% for user in asker_id %}
+<main class="ticketchat">
+            <h1>{{supportticket.name}}</h1>
+    
+    
+            <div class="message-form">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="text" name="body" placeholder="Пиши" />
+                </form>
+            </div>
+            {% endif %}
+    
+    
         <div>
-            <p>@{{user.username}}</p>
+            <h3>Чат</h3>
+         
+    
+            {% for user in asker_id %}
+            <div>
+                <p>@{{user.username}}</p>
+            </div>
+            {% endfor %}
+    
+            {% for user in responsible_id %}
+            <div>
+                <p>@{{user.username}}</p>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-
-        {% for user in responsible_id %}
-        <div>
-            <p>@{{user.username}}</p>
-        </div>
-        {% endfor %}
+    
     </div>
-
-</div>
+</main class="ticketchat">
 {% endblock %}
 
 

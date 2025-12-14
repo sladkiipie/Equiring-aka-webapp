@@ -2,9 +2,8 @@ import uuid
 
 from django.conf import settings
 from django.db import models
-from django.db.models import ForeignKey
+from django.db.models import ForeignKey, TimeStampedModel, SoftDeletableModel
 from django.utils.translation import gettext_lazy as _
-from model_utils.models import TimeStampedModel, SoftDeletableModel
 from django.db.models import Q
 from typing import Optional, Any
 from users.models import Contracts, User

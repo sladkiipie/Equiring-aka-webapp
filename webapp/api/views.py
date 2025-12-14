@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from users.models import Contracts
 from supports.models import SupporTicket
-from .serializers import ContractsSerializer
+from .serializers import ContractsSerializer, TicketSerializer
 from webapp.api import serializers
 
 @api_view(['GET'])
@@ -21,4 +21,9 @@ def getContract(request):
     serializer = ContractsSerializer(contracts, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getContract(request):
+    SupporTicket = SupporTicket.objects.all()
+    serializer = TicketSerializer(SupporTicket, many=True)
+    return Response(serializer.data)
 
