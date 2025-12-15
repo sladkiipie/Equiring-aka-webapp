@@ -23,4 +23,7 @@ class CreateCompanyForm(ModelForm):
 class CreateContractForm(ModelForm):
     class Meta:
         model = Contracts
-        fields = ['name_contract']
+        fields = ['name_contract', 'company']
+        
+        
+        

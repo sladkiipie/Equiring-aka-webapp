@@ -1,8 +1,8 @@
 {% extends 'main.html' %}
 
-{% block content %}
 
-<main class="companyform">
+{% block content %}
+<main class="updatecontract">
           <a href="{% url 'userhome' %}">Домашка</a>
             <h3>Зарегистрировать компанию</h3>
    <div>
@@ -22,7 +22,18 @@
              <label for="Companies_OGRN">ОГРН</label>
              {{form.OGRN}}
        </div>
-        <input type="submit" value="Submit" />
+        <div class="form__group">
+            <label for="room_topic">Enter a Topic</label>
+            <input required type="text" value="{{contract.status.name}}" name="topic" list="status-list" />
+            <datalist id="status-list">
+              <select id="status_topic">
+                {% for status in statuss %}
+                <option value="{{status.name}}">{{status.name}}</option>
+                {% endfor %}
+              </select>
+            </datalist>
+        </div>
+                <input type="submit" value="Submit" />
      </form>
    </div>
 </main>

@@ -1,13 +1,10 @@
 {% extends 'main.html' %}
 
 {% block content %}
-=======
 <main class="loginpage">
     <div>
        <div>
         <div>
-             {% if page == 'loginpage' %}
-             
                  <form method="POST" action="">
                      {% csrf_token %}
              
@@ -24,4 +21,5 @@
        </div>
     </div>
 </main class="loginpage">
+
 {% endblock %}
