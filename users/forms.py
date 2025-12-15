@@ -21,8 +21,10 @@ class CreateCompanyForm(ModelForm):
     class Meta:
         model = Companies
         fields = ['INN', 'OGRN', 'name_company']
+        widgets = {'name_company': forms.CheckboxSelectMultiple(),}
 
 class CreateContractForm(ModelForm):
     class Meta:
         model = Contracts
         fields = ['name_contract', 'company']
+        widgets = {'company': forms.CheckboxSelectMultiple(),}
