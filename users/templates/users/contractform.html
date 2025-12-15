@@ -3,31 +3,10 @@
 {% block content %}
 
 
-<main class="contractform">
-            <h3>Создать контракт</h3>
-   <div>
-     <form class="form" action="" method="POST">
-           {% csrf_token %}
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Save</button>
+    </form>
 
-          <div class="formgroup">
-            <label for="room_topic">Выберите контракт</label>
-            <input required type="text" value="{{contracts.company.name}}" name="Компания" list="company-list" />
-            <datalist id="company-list">
-              <select id="contract_company">
-                {% for company in companys %}
-                <option value="{{company.name}}">{{company.name}}</option>
-                {% endfor %}
-              </select>
-            </datalist>
-          </div>
-
-        <div class="formcompany">
-             <label for="Contracts_name_contract">Название контракта</label>
-             <input type="text" name="name_contract" required>
-             {{Contracts.name_contract}}
-       </div>
-        <input type="submit" value="Submit" />
-     </form>
-   </div>
-</main>
 {% endblock content%}

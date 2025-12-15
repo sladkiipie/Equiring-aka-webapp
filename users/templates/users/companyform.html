@@ -1,8 +1,7 @@
 {% extends 'main.html' %}
-
 {% block content %}
-
-<main class="companyform">
+<main class="updatecontract">
+          <a href="{% url 'userhome' %}">Домашка</a>
             <h3>Зарегистрировать компанию</h3>
    <div>
      <form class="form" action="" method="POST">
@@ -17,11 +16,11 @@
              {{form.INN}}
        </div>
 
-        <div class="form__company">
+        <div class="formcompany">
              <label for="Companies_OGRN">ОГРН</label>
              {{form.OGRN}}
        </div>
-        <input type="submit" value="Submit" />
+                <input type="submit" value="Submit" />
      </form>
    </div>
 </main>
