@@ -10,7 +10,7 @@ class PrimaryUserForm(ModelForm):
         model = User
         fields = ['name','email', 'phone_number', 'message']
 
-class TicketForm(ModelForm):
+class CreateTicketForm(ModelForm):
     class Meta:
         model = SupporTicket
         fields = ['contract', 'description']
@@ -23,4 +23,4 @@ class CreateCompanyForm(ModelForm):
 class CreateContractForm(ModelForm):
     class Meta:
         model = Contracts
-        fields = ['name_contract']
+        fields = ['name_contract', 'company']

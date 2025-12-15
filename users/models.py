@@ -1,11 +1,9 @@
 import uuid
 
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
-from datetime import timedelta
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Permission
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from django.db.models import ForeignKey, OneToOneField
+from django.db.models import OneToOneField
 
 
 # Создание менеджера пользователей
@@ -115,7 +113,7 @@ class Transactions(models.Model):
         return self.type_transaction
 
 class Application(models.Model):
-    owner = models.IntegerField(ForeignKey(User, on_delete=models.CASCADE, related_name='application_owner'))
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='application_owner')
     type_request = models.CharField(max_length=255)
     message = models.TextField()
     for_company = models.ForeignKey(Companies, on_delete=models.CASCADE, related_name='application_for_company')

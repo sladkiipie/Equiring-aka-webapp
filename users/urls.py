@@ -22,4 +22,7 @@ urlpatterns = [
 
     path('tickets/', views.ticket_page, name='tickets'),  # Тикеты юзера - СПИСОК
     path('create-ticket/', views.create_ticket, name='supportticketform'),
+
+    # path('applications/', views.application_page, name='applicationslist'),
+    # path('application<>')
 ]
