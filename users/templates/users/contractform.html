@@ -1,12 +1,25 @@
 {% extends 'main.html' %}
-
 {% block content %}
+<main class="updatecontract">
+    <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
+    <h3>Создать контракт</h3>
+    <div>
+        <form class="form" action="" method="POST">
+            {% csrf_token %}
+            
 
-
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Save</button>
-    </form>
-
-{% endblock content%}
+            <div class="formcompany">
+                <label for="id_name_contract">Название контракта:</label>
+                {{ form.name_contract }}
+            </div>
+            
+            <div class="formcompany">
+                <label>Выберите компанию:</label>
+                {{ form.companies }}
+            </div>
+            
+            <input type="submit" value="Создать" />
+        </form>
+    </div>
+</main>
+{% endblock %}
