@@ -1,6 +1,7 @@
 {% extends 'main.html' %}
 {% block content %}
 <main class="supticket">
+           <a href="{% url 'userhome' %}">Домашка</a>
     <div>
      <form class="form" action="" method="POST">
            {% csrf_token %}
@@ -8,7 +9,7 @@
             <label for="Company_company_name">Выберите компанию</label>
             <input required type="text" value="{{Companies.company_name}}" name="Company_name" list="company-list" />
             <datalist id="company-list">
-              <select id="company_company_name">
+              <select id="company.company_name">
                 {% for company_name in company_names %}
                 <option value="{{Companies.name_company}}">{{Companies.name_company}}</option>
                 {% endfor %}
@@ -18,7 +19,7 @@
             <label for="contract_name">Выберите контракт</label>
             <input required type="text" value="{{Contracts.name_contract}}" name="name_contract" list="company-list" />
             <datalist id="contracts-list">
-              <select id="contracts_name_contract">
+              <select id="contracts.name_contract">
                 {% for name_contract in name_contracts %}
                 <option value="{{Contracts.name_contract}}">{{Contracts.name_contract}}</option>
                 {% endfor %}
@@ -31,6 +32,7 @@
              <input type="text" name="supportticket_description" required>
              {{SupporTicket.description}}
            </div>
+                  <input type="submit" value="Submit" />
      </form>
    </div>
 </main>

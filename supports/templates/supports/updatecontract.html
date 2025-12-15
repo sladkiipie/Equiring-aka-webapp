@@ -1,26 +1,28 @@
 {% extends 'main.html' %}
 
+
+{% block content %}
 <main class="updatecontract">
           <a href="{% url 'userhome' %}">Домашка</a>
             <h3>Зарегистрировать компанию</h3>
    <div>
      <form class="form" action="" method="POST">
            {% csrf_token %}
-           <div class="formcompany">
+           <div class="form__company">
              <label for="company_name">Название компании:</label>
              {{form.name_company}}
            </div>
 
-       <div class="formcompany">
+       <div class="form__company">
              <label for="Companies_INN">ИНН</label>
              {{form.INN}}
        </div>
 
-        <div class="formcompany">
+        <div class="form__company">
              <label for="Companies_OGRN">ОГРН</label>
              {{form.OGRN}}
        </div>
-        <div class="formgroup">
+        <div class="form__group">
             <label for="room_topic">Enter a Topic</label>
             <input required type="text" value="{{contract.status.name}}" name="topic" list="status-list" />
             <datalist id="status-list">

@@ -9,7 +9,7 @@ from users.models import Contracts, User, Companies
 
 
 def support_page(request):
-    return render(request, 'support/support_page.html')
+    return render(request, 'supports/supportpage.html')
 
 
 def primary_user_check(request, id):
@@ -21,17 +21,17 @@ def primary_user_check(request, id):
 
         if form.is_valid():
             form.save()
-            return redirect('support/users-list.html')
+            return redirect('supports/users-list.html')
 
     else:
         form = PrimaryUserCheckForm(instance=primary_user)
 
     context = {'form': form}
-    return render(request, 'support/users-list.html', context)
+    return render(request, 'supports/users-list.html', context)
 
 
 def companies_page(request):
-    return render(request, 'support/company-list.html')
+    return render(request, 'supports/company-list.html')
 
 def company_check(request, id):
 
@@ -42,17 +42,17 @@ def company_check(request, id):
         form = CheckCompanyForm(request.POST, instance=company)
         if form.is_valid():
             form.save()
-            return redirect('support/companies-list.html')
+            return redirect('supports/companies-list.html')
 
     else:
         form = CheckCompanyForm(instance=company)
 
     context = {'form': form}
-    return render(request, 'support/companies-list.html', context)
+    return render(request, 'supports/companies-list.html', context)
 
 
 def tickets_page(request):
-    return render(request, 'support/ticket-list.html')
+    return render(request, 'supports/ticket-list.html')
 
 def ticket_check(request, id):  # изменяет статус тикета
 
@@ -63,16 +63,16 @@ def ticket_check(request, id):  # изменяет статус тикета
 
         if form.is_valid():
             form.save()
-            return redirect('support/ticket.html')
+            return redirect('supports/ticket.html')
     else:
         form = CheckTicketForm(instance=support_ticket)
 
     context = {'form': form}
-    return render(request, 'support/ticket.html', context)
+    return render(request, 'supports/ticket.html', context)
 
 
 def contracts_page(request):
-    return render(request, 'support/contract-list.html')
+    return render(request, 'supports/contract-list.html')
 
 def contract_check(request):
 
@@ -83,10 +83,10 @@ def contract_check(request):
             form = CheckContractForm(request.POST, instance=contract)
             if form.is_valid():
                 form.save()
-                return redirect('support/contracts-list.html')
+                return redirect('supports/contracts-list.html')
 
         else:
             form = CheckContractForm(instance=contract)
 
         context = {'form': form}
-        return render(request, 'support/contracts-list.html', context)
+        return render(request, 'supports/contracts-list.html', context)
