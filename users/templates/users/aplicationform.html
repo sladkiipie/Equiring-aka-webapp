@@ -1,6 +1,20 @@
 {% extends 'main.html' %}
 {% block content %}
-
+    <main class="contractform">
+         <a href="{% url 'userhome' %}">Домашка</a>
+            <h3>Создать обращение</h3>
+   <div>
+     <form class="form" action="" method="POST">
+           {% csrf_token %}
+        <div class="form__application">
+             <label for="Contracts_name_contract">Название контракта</label>
+             <input type="text" name="name_contract" required>
+             {{Contracts.name_contract}}
+       </div>
+        <input type="submit" value="Submit" />
+     </form>
+   </div>
+</main>
 
 
 
