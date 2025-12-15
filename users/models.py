@@ -78,7 +78,7 @@ class Companies(models.Model):
     INN = models.BigIntegerField()
     OGRN = models.BigIntegerField()
     name_company = models.CharField(max_length=255)
-    founder = models.ForeignKey(User, related_name='company')
+    founder = models.ManyToManyField(User, related_name='founder')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
@@ -92,7 +92,7 @@ class Contracts(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    company = models.ManyToManyField(Companies, on_delete=models.CASCADE)
+    company = models.ManyToManyField(Companies, related_name='companies')
     name_contract = models.CharField(max_length=255)
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default='pending') # документ должен быть в темплейтс или еще где будем просто вызывать док пользовательского соглашения  он одинаков для всех
 
@@ -116,8 +116,8 @@ class Application(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='application_owner')
     type_request = models.CharField(max_length=255)
     message = models.TextField()
-    for_company = models.ManyToManyField(Companies, on_delete=models.CASCADE, related_name='application_for_company')
-    for_contract = models.ManyToManyField(Contracts, on_delete=models.CASCADE, related_name='application_for_contract')
+    for_company = models.ManyToManyField(Companies, related_name='application_for_company')
+    for_contract = models.ManyToManyField(Contracts, related_name='application_for_contract')
     application_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
