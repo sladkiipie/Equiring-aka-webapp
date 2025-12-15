@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import SetPasswordForm
 
@@ -14,6 +15,7 @@ class CreateTicketForm(ModelForm):
     class Meta:
         model = SupporTicket
         fields = ['contract', 'description']
+        widgets = {'contracts': forms.CheckboxSelectMultiple(),}
 
 class CreateCompanyForm(ModelForm):
     class Meta:
