@@ -92,7 +92,7 @@ class Contracts(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    company = models.ForeignKey(Companies, on_delete=models.CASCADE)
+    company = models.ManyToManyField(Companies, on_delete=models.CASCADE)
     name_contract = models.CharField(max_length=255)
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default='pending') # документ должен быть в темплейтс или еще где будем просто вызывать док пользовательского соглашения  он одинаков для всех
 
