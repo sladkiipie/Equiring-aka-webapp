@@ -12,7 +12,7 @@ def guest_page(request):
 def login_page(request): #проверяет авторизован ли пользователь, если да то пропускает на главную страницу, если нет то открывает страницу авторизации
     page = 'login'
     if request.user.is_authenticated:
-        return redirect('userhome.html')
+        return redirect('userhome')
     if request.method == 'POST':
         uslog = request.POST.get('login')
         password = request.POST.get('password')
@@ -110,4 +110,4 @@ def create_ticket(request):# создает тикет с данными из ф
     else:
         form = TicketForm()
 
-    return render(request, 'support/tickets.html', {'form': form})
+    return render(request, 'users/tickets.html', {'form': form})
