@@ -78,7 +78,7 @@ class Companies(models.Model):
     INN = models.BigIntegerField()
     OGRN = models.BigIntegerField()
     name_company = models.CharField(max_length=255)
-    founder = models.ManyToManyField(User, related_name='company')
+    founder = models.ForeignKey(User, related_name='company')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
@@ -116,8 +116,8 @@ class Application(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='application_owner')
     type_request = models.CharField(max_length=255)
     message = models.TextField()
-    for_company = models.ForeignKey(Companies, on_delete=models.CASCADE, related_name='application_for_company')
-    for_contract = models.ForeignKey(Contracts, on_delete=models.CASCADE, related_name='application_for_contract')
+    for_company = models.ManyToManyField(Companies, on_delete=models.CASCADE, related_name='application_for_company')
+    for_contract = models.ManyToManyField(Contracts, on_delete=models.CASCADE, related_name='application_for_contract')
     application_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
