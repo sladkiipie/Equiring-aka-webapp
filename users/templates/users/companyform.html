@@ -7,21 +7,19 @@
    <div>
      <form class="form" action="" method="POST">
            {% csrf_token %}
-    
-           <div class="form__company">
+           <div class="formcompany">
              <label for="company_name">Название компании:</label>
-             <input type="text" name="company_name" required>
-             {{Companies.name_company}}
+             {{form.name_company}}
            </div>
-    
-       <div class="form__company">
+
+       <div class="formcompany">
              <label for="Companies_INN">ИНН</label>
-             {{Companies.INN}}
+             {{form.INN}}
        </div>
 
         <div class="form__company">
              <label for="Companies_OGRN">ОГРН</label>
-             {{Companies.OGRN}}
+             {{form.OGRN}}
        </div>
         <input type="submit" value="Submit" />
      </form>

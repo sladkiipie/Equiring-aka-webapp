@@ -1,13 +1,38 @@
 {% extends 'main.html' %}
 
-{% block content %}
-
 <main class="updatecontract">
-     <form method="POST" action="">
-            {% csrf_token %}
-            {{form.as_p}}
-            <input type="Update" value="Update" />
-        </form>
-    
-</main class="updatecontract">
+          <a href="{% url 'userhome' %}">Домашка</a>
+            <h3>Зарегистрировать компанию</h3>
+   <div>
+     <form class="form" action="" method="POST">
+           {% csrf_token %}
+           <div class="formcompany">
+             <label for="company_name">Название компании:</label>
+             {{form.name_company}}
+           </div>
+
+       <div class="formcompany">
+             <label for="Companies_INN">ИНН</label>
+             {{form.INN}}
+       </div>
+
+        <div class="formcompany">
+             <label for="Companies_OGRN">ОГРН</label>
+             {{form.OGRN}}
+       </div>
+        <div class="formgroup">
+            <label for="room_topic">Enter a Topic</label>
+            <input required type="text" value="{{contract.status.name}}" name="topic" list="status-list" />
+            <datalist id="status-list">
+              <select id="status_topic">
+                {% for status in statuss %}
+                <option value="{{status.name}}">{{status.name}}</option>
+                {% endfor %}
+              </select>
+            </datalist>
+        </div>
+                <input type="submit" value="Submit" />
+     </form>
+   </div>
+</main>
 {% endblock %}

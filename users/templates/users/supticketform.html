@@ -2,18 +2,36 @@
 {% block content %}
 <main class="supticket">
     <div>
-       <div>
-        <div>
+     <form class="form" action="" method="POST">
+           {% csrf_token %}
+                <div class="formsupticketform">
+            <label for="Company_company_name">Выберите компанию</label>
+            <input required type="text" value="{{Companies.company_name}}" name="Company_name" list="company-list" />
+            <datalist id="company-list">
+              <select id="company_company_name">
+                {% for company_name in company_names %}
+                <option value="{{Companies.name_company}}">{{Companies.name_company}}</option>
+                {% endfor %}
+              </select>
+            </datalist>
 
-             
-              <form method="POST" action="">
-                     {% csrf_token %}
-                     {{form.as_p}}
-                     <input type="submit" value="Submit" />
-                </form>
-             
-        </div>
-       </div>
-    </div>
+            <label for="contract_name">Выберите контракт</label>
+            <input required type="text" value="{{Contracts.name_contract}}" name="name_contract" list="company-list" />
+            <datalist id="contracts-list">
+              <select id="contracts_name_contract">
+                {% for name_contract in name_contracts %}
+                <option value="{{Contracts.name_contract}}">{{Contracts.name_contract}}</option>
+                {% endfor %}
+              </select>
+            </datalist>
+
+          </div>
+           <div class="formsupport">
+             <label for="supportticket_description">Опишите вашу проблему:</label>
+             <input type="text" name="supportticket_description" required>
+             {{SupporTicket.description}}
+           </div>
+     </form>
+   </div>
 </main>
 {% endblock %}
