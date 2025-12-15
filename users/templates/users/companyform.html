@@ -3,14 +3,28 @@
 {% block content %}
 
 <main class="companyform">
-    <div>
-        <form class="form" action="" method="POST">
-          {% csrf_token %}
+            <h3>Зарегистрировать компанию</h3>
+   <div>
+     <form class="form" action="" method="POST">
+           {% csrf_token %}
+    
+           <div class="form__company">
+             <label for="company_name">Название компании:</label>
+             <input type="text" name="company_name" required>
+             {{Companies.name_company}}
+           </div>
+    
+       <div class="form__company">
+             <label for="Companies_INN">ИНН</label>
+             {{Companies.INN}}
+       </div>
 
-          <div class="form__company">
-            <label for="company_name">Название компании:</label>
-            <input type="text" name="company_name" required>
-          </div>
-    </div>
+        <div class="form__company">
+             <label for="Companies_OGRN">ОГРН</label>
+             {{Companies.OGRN}}
+       </div>
+        <input type="submit" value="Submit" />
+     </form>
+   </div>
 </main>
 {% endblock %}
