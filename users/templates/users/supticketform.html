@@ -5,15 +5,10 @@
     <div>
      <form class="form" action="" method="POST">
            {% csrf_token %}
-            <label for="contract_name">Выберите контракт</label>
-            <input required type="text" value="{{Contracts.name_contract}}" name="name_contract" list="company-list" />
-            <datalist id="contracts-list">
-              <select id="contracts.name_contract">
-                {% for name_contract in name_contracts %}
-                <option value="{{Contracts.name_contract}}">{{Contracts.name_contract}}</option>
-                {% endfor %}
-              </select>
-            </datalist>
+           <div class="formsuptick">
+               <label for="{{ form.supticket.id_for_label }}">Контракт:</label>
+               {{ form.contract }}
+           </div>
 
           </div>
            <div class="formsupport">
