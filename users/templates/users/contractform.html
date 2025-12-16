@@ -13,10 +13,12 @@
                 {{ form.name_contract }}
             </div>
             
-            <div class="formcompany">
-                <label>Выберите компанию:</label>
-                {{ form.companies }}
-            </div>
+            <select name="company" id="company">
+            <option value="">Select a company</option>
+            {% for company in companies %}
+             <option value="{{ company.id }}">{{ company.name }}</option>
+            {% endfor %}
+            </select>
             
             <input type="submit" value="Создать" />
         </form>
