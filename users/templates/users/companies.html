@@ -4,7 +4,12 @@
 
 
 <main class="companygrid">
-        <div class="companylist">
+        <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
+        </div>
+        {% for company in companies %}
+            <div class="company-item">
+                <h3>{{ company.name }}</h3>
+            </div>
             <div class="companylink">
                 <a href="{% url 'companyform' %}">Зарегистрировать компанию</a>  
             </div>

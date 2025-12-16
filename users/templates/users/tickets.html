@@ -2,12 +2,13 @@
 {% block content %}
 
 <main class="ticketslist">
-             <a href="{% url 'userhome' %}">Домашка</a>
+             <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
     <div>
+                {% for ticket in tickets %}
+            <div class="company-item">
+                <h3>{{ ticket.description }}</h3>
+            </div>
             <div> 
-                <div>
-                    <h5>{{supportticket_count}} Список Тикетов</h5>
-                </div>
                 <div class="supticklink">
                     <a href="{% url 'supportticketform' %}">Создать обращение в поддержку</a>  
                 </div>

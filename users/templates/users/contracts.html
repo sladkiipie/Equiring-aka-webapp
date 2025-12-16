@@ -4,7 +4,11 @@
 
 
 <main class="contractsgrid">
+    <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
     <div>
+            {% for contract in contracts %}
+            <div class="contract-item">
+                <h3>{{ contract.name_contract }}</h3>
         <div>
             <div>
                 <a href="{% url 'contractform' %}">новый контракт</a>  

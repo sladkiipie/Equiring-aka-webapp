@@ -15,7 +15,7 @@ class CreateTicketForm(ModelForm):
     class Meta:
         model = SupporTicket
         fields = ['contract', 'description']
-        widgets = {'contract': forms.CheckboxSelectMultiple(),'companies': forms.CheckboxSelectMultiple(),}
+        widgets = {'contract': forms.Select(),}
 
 class CreateCompanyForm(ModelForm):
     class Meta:
