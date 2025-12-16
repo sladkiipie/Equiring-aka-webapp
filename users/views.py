@@ -107,12 +107,12 @@ def ticket_page(request):
 @login_required(login_url='login')
 def create_ticket(request):# создает тикет с данными из формы contract description
     if request.method == 'POST':
-        form = CreateTicketForm(request.POST)
+        form = CreateTicketForm(request.POST or None, user=request.user)
         if form.is_valid():
             form.save()
-            return redirect(request, 'tickets/')
+        return redirect(request, 'tickets/')
     else:
-        form = CreateTicketForm()
+        form = CreateTicketForm(user=request.user)
 
     return render(request, 'users/supticketform.html', {'form': form})
 
