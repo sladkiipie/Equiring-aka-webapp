@@ -15,7 +15,17 @@ class CreateTicketForm(ModelForm):
     class Meta:
         model = SupporTicket
         fields = ['contract', 'description']
-        widgets = {'contract': forms.Select(),}
+        widgets = {'contract': forms.Select()}
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['contract'].queryset = Companies.objects.filter(
+                founder=user,
+                status='approved'
+            )
 
 class CreateCompanyForm(ModelForm):
     class Meta:

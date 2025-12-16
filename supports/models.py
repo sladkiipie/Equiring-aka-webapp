@@ -33,7 +33,7 @@ class SupporTicket(TimeStampedModel):
                               related_name="+", db_index=True)
     responsible = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Responsible",
                               related_name="+", db_index=True)
-    contract = models.ManyToManyField(Contracts, related_name="contract")
+    contract = models.ForeignKey(Contracts, related_name="contract", on_delete=models.CASCADE)
     description = models.TextField()
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='opened')
     created_at = models.DateTimeField(auto_now_add=True)
