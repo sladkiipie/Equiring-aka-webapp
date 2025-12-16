@@ -4,15 +4,10 @@ from .models import SupporTicket
 from users.models import Contracts, User
 
 
-class SupporTicketForm(ModelForm):
+class CheckTicketForm(ModelForm):
     class Meta:
         model = SupporTicket
         fields = ['status']
-
-class UpdateContractForm(ModelForm):
-    class Meta:
-        model = Contracts
-        fields = ['company', 'name_contract']
 
 class CheckContractForm(ModelForm):
     class Meta:

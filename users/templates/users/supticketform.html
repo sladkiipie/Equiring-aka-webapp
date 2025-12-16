@@ -1,11 +1,23 @@
 {% extends 'main.html' %}
-
 {% block content %}
+<main class="supticket">
+           <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
+    <div>
+     <form class="form" action="" method="POST">
+           {% csrf_token %}
+           <div class="formsuptick">
+               <label for="{{ form.contract.id_for_label }}">Контракт:</label>
+               {{ form.contract }}
+           </div>
 
- <form method="POST" action="">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Submit" />
-    </form>
-
+          </div>
+           <div class="formsupport">
+             <label for="supportticket_description">Опишите вашу проблему:</label>
+             <input type="text" name="supportticket_description" required>
+             {{SupporTicket.description}}
+           </div>
+                  <input type="submit" value="Submit" />
+     </form>
+   </div>
+</main>
 {% endblock %}

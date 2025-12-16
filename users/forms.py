@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import SetPasswordForm
 
@@ -10,17 +11,41 @@ class PrimaryUserForm(ModelForm):
         model = User
         fields = ['name','email', 'phone_number', 'message']
 
-class TicketForm(ModelForm):
+class CreateTicketForm(ModelForm):
     class Meta:
         model = SupporTicket
         fields = ['contract', 'description']
+        widgets = {'contract': forms.Select()}
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['contract'].queryset = Companies.objects.filter(
+                founder=user,
+                status='approved'
+            )
 
 class CreateCompanyForm(ModelForm):
     class Meta:
         model = Companies
         fields = ['INN', 'OGRN', 'name_company']
 
-class CreateContractForm(ModelForm):
+class CreateContractForm(forms.ModelForm):
     class Meta:
         model = Contracts
-        fields = ['name_contract']
+        fields = ['name_contract', 'company']
+        widgets = {
+            'company': forms.Select(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['company'].queryset = Companies.objects.filter(
+                founder=user,
+                status='approved',
+            )

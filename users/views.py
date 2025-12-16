@@ -1,20 +1,19 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from supports.models import SupporTicket
-from .models import User, RegistrationToken, Contracts, Companies
-from .forms import TicketForm, PrimaryUserForm, SetPasswordForm, CreateContractForm, CreateCompanyForm
+from django.contrib.auth.decorators import login_required
+from .models import User, RegistrationToken, Companies
+from .forms import CreateTicketForm, PrimaryUserForm, SetPasswordForm, CreateContractForm, CreateCompanyForm
 
 
 
-
-def home_page(request):
-    return redirect(request, 'users/userhome.html')
+def guest_page(request):
+    return render(request, 'users/mainpage.html')
 
 def login_page(request): #проверяет авторизован ли пользователь, если да то пропускает на главную страницу, если нет то открывает страницу авторизации
     page = 'login'
     if request.user.is_authenticated:
-        return redirect('home')
+        return redirect('userhome')
     if request.method == 'POST':
         uslog = request.POST.get('login')
         password = request.POST.get('password')
@@ -25,47 +24,22 @@ def login_page(request): #проверяет авторизован ли пол�
         user = authenticate(request, login=uslog, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('userhome')
         else: # если нет то ошибка
             messages.error(request, 'Ничего нет')
     context = {'page': page}
-    return render(request, 'studentpages/login.html', context)
-
-
-def logout_user(request):
-    logout(request)
-    return redirect('home') # выходит из аккаунта
-
-def ticket_page(request):
-    return redirect(request, 'ticket_page.html')
-
-def create_ticket(request):# создает тикет с данными из формы contract description
-    if request.method == 'POST':
-        form = TicketForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(request, 'support/ticket.html')
-    else:
-        form = TicketForm()
-
-    return render(request, 'support/ticket.html', {'form': form})
-
-
-def contract_page(request):
-    return redirect(request, 'support/contract.html') # страница контрактов
-
+    return render(request, 'users/loginpage.html', context)
 
 def create_primary_user(request): # создание первичной заявки на консультацию на открытие эквайринга
     if request.method == 'POST':
         form = PrimaryUserForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect(request, 'support/contract.html')
+        return redirect(request, 'support/mainpage.html')
     else:
         form = PrimaryUserForm()
 
-    return render(request, 'support/contract.html', {'form': form})
-
+    return render(request, 'support/mainpage.html', {'form': form})
 
 def set_password_view(request, token): # страница создания аккаунта (логин и пароль)
     registration_token = get_object_or_404(RegistrationToken, token=token)
@@ -78,36 +52,86 @@ def set_password_view(request, token): # страница создания ак�
             registration_token.used = True
             registration_token.save()
             login(request, registration_token.user)
-            return redirect('home_page')
+            return redirect('login/')
     else:
         form = SetPasswordForm(User)
     return render(request, "users/set_password.html", {'form': form})
 
 
+@login_required(login_url='login')
+def home_page(request):
+    return render(request, 'users/userhome.html')
+
+@login_required(login_url='login')
+def logout_user(request):
+    logout(request)
+    return redirect('home/') # выходит из аккаунта
+
+
+@login_required(login_url='login')
+def contract_page(request):
+    return render(request, 'users/contracts.html') # страница контрактов
+
+@login_required(login_url='login')
 def create_contract(request):
     if request.method == 'POST':
-        contract_form = CreateContractForm(request.POST)
-        company_form = CreateCompanyForm(request.POST)
-        if company_form.is_valid() and contract_form.is_valid():
-            contract_form.save()
-            company_form.save()
-        return redirect('create_contract_page')
-    else:
-        contract_form = CreateContractForm()
-        company_form = CreateCompanyForm()
-    context = {
-        "company_form": company_form,
-        "contract_form": contract_form,
-    }
-    return render(request, 'support/contract.html', context)
-
-
-def create_another_contract(request):
-    if request.method == 'POST':
-        form = CreateContractForm(request.POST)
+        form = CreateContractForm(request.POST or None, user=request.user)
         if form.is_valid():
             form.save()
-        return redirect('create_contract_page')
+        return redirect('contracts')
     else:
-        form = CreateContractForm()
-        return render(request, 'support/another_contract.html', {"form": form})
+        form = CreateContractForm(user=request.user)
+    return render(request, 'users/contractform.html', {"form": form})
+
+
+@login_required(login_url='login')
+def company_page(request):
+    return render(request, 'users/companies.html')
+
+@login_required(login_url='login')
+def create_company(request):
+    if request.method == 'POST':
+        form = CreateCompanyForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect('companies/')
+    else:
+        form = CreateCompanyForm()
+    return render(request, 'users/companyform.html', {"form": form})
+
+
+@login_required(login_url='login')
+def ticket_page(request):
+    return render(request, 'users/tickets.html')
+
+@login_required(login_url='login')
+def create_ticket(request):# создает тикет с данными из формы contract description
+    if request.method == 'POST':
+        form = CreateTicketForm(request.POST or None, user=request.user)
+        if form.is_valid():
+            form.save()
+        return redirect(request, 'tickets/')
+    else:
+        form = CreateTicketForm(user=request.user)
+
+    return render(request, 'users/supticketform.html', {'form': form})
+
+@login_required(login_url='login')
+def applications_list(request):
+    return render(request, 'users/applicationslist.html')
+
+@login_required(login_url='login')
+def application_page(request):
+    return render(request, 'users/applications.html')
+
+@login_required(login_url='login')
+def create_application(request):
+    if request.method == 'POST':
+        form = CreateTicketForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(request, 'applications/')
+    else:
+        form = CreateTicketForm()
+
+    return render(request, 'users/applicationform.html', {'form': form})

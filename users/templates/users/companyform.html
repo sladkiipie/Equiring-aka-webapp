@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+{% block content %}
+<main class="updatecontract">
+          <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
+            <h3>Зарегистрировать компанию</h3>
+   <div>
+     <form class="form" action="" method="POST">
+           {% csrf_token %}
+           <div class="formcompany">
+             <label for="company_name">Название компании:</label>
+             {{form.name_company}}
+           </div>
+
+       <div class="formcompany">
+             <label for="Companies_INN">ИНН</label>
+             {{form.INN}}
+       </div>
+
+        <div class="formcompany">
+             <label for="Companies_OGRN">ОГРН</label>
+             {{form.OGRN}}
+       </div>
+                <input type="submit" value="Submit" />
+     </form>
+   </div>
+</main>
+{% endblock %}

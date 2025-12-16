@@ -1,0 +1,9 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="ticketchat">
+    <li><a href="{% url 'updateticketform' %}">Контракты</a></li>
+    <li><a href="{% url 'updatecontractform' %}">Обновить компанию</a></li>
+    <li><a href="{% url 'ticketlist' %}">Список обращений</a></li>
+</main class="ticketchat">
+{% endblock %}

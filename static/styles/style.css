@@ -1,33 +1,40 @@
 
 
-
 .container {
   max-width: 120rem;
   width: 90%;
   margin: auto;
 }
 
-/* кнопки */
-.btn_grid{
+/* компании */
 
 
-}   
-
-/* контракт */
-.contract_layout{
+/* контракты */
+.contractform_layout{
 
     background-color: aquamarine;
 }
 
-
-.btn{
-  background-color: transparent;
-  border-radius: 5px;
-}
-
-/* сапорты */
-
-.supports_grid {
-
+.contractsgrid{
 
 }
+/* сапортытикеты */
+
+.supportsform_layout{
+  background-color: aquamarine;
+
+}
+
+
+/* домстраница */
+.mainpage_layout{
+background-color: aquamarine;
+
+}
+
+
+/* юзерстраница */
+
+
+
+/* чатик */

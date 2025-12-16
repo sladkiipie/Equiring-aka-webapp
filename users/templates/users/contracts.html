@@ -1,10 +1,18 @@
 {% extends 'main.html' %}
 {% block content %}
-
-
-        <div> 
-            <a href="{% url 'contractform' %}">новый контракт</a>  
-         </div>
-
-
+<main class="contractsgrid">
+    <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
+    <div>
+            <div class="contract-item">
+                <h3>{{ contract.name_contract }}</h3>
+        <div>
+            <div>
+                <a href="{% url 'contractform' %}">новый контракт</a>  
+                
+            </div>
+            
+        </div>
+        
+    </div>
+</main class="contractsgrid">
 {% endblock content%}

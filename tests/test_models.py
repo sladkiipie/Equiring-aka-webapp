@@ -17,6 +17,8 @@ from django.db import IntegrityError
 from .factories import SupporTicketFactory, TicketMessageFactory, UserFactory, faker
 
 
+
+
 class UploadedFileModelTests(TestCase):
     def setUp(self) -> None:
         self.file = UploadedFile.objects.create(uploaded_by=UserFactory.create(), file="LICENSE")

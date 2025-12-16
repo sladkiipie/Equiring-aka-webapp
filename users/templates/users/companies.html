@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+{% block content %}
+
+
+
+<main class="companygrid">
+        <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
+        </div>
+            <div class="company-item">
+                <h3>{{ company.name }}</h3>
+            </div>
+            <div class="companylink">
+                <a href="{% url 'companyform' %}">Зарегистрировать компанию</a>  
+            </div>
+        </div>   
+</main class="companygrid">
+{% endblock content%}
