@@ -4,7 +4,6 @@
 <main class="ticketslist">
              <a href="{% url 'userhome' %}">Вернуться на домашнюю страницу</a>
     <div>
-                {% for ticket in tickets %}
             <div class="company-item">
                 <h3>{{ ticket.description }}</h3>
             </div>
