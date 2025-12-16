@@ -27,5 +27,15 @@ class CreateContractForm(forms.ModelForm):
         model = Contracts
         fields = ['name_contract', 'company']
         widgets = {
-            'companies': forms.CheckboxSelectMultiple(),
+            'company': forms.Select(),
         }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['company'].queryset = Companies.objects.filter(
+                founder=user,
+                status='approved',
+            )

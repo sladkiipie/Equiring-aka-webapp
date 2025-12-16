@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import User, RegistrationToken
+from .models import User, RegistrationToken, Companies
 from .forms import CreateTicketForm, PrimaryUserForm, SetPasswordForm, CreateContractForm, CreateCompanyForm
 
 
@@ -75,12 +75,12 @@ def contract_page(request):
 @login_required(login_url='login')
 def create_contract(request):
     if request.method == 'POST':
-        form = CreateContractForm(request.POST)
+        form = CreateContractForm(request.POST or None, user=request.user)
         if form.is_valid():
             form.save()
         return redirect('contracts')
     else:
-        form = CreateContractForm()
+        form = CreateContractForm(user=request.user)
     return render(request, 'users/contractform.html', {"form": form})
 
 

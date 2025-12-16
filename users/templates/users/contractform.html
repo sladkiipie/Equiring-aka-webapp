@@ -6,20 +6,18 @@
     <div>
         <form class="form" action="" method="POST">
             {% csrf_token %}
-            
+
 
             <div class="formcompany">
                 <label for="id_name_contract">Название контракта:</label>
                 {{ form.name_contract }}
             </div>
-            
-            <select name="company" id="company">
-            <option value="">Select a company</option>
-            {% for company in companies %}
-             <option value="{{ company.id }}">{{ company.name }}</option>
-            {% endfor %}
-            </select>
-            
+
+           <div class="formcompany">
+               <label for="{{ form.company.id_for_label }}">Компания:</label>
+               {{ form.company }}
+           </div>
+
             <input type="submit" value="Создать" />
         </form>
     </div>
