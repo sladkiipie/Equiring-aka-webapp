@@ -6,7 +6,6 @@ from django.db import models
 from django.db.models import OneToOneField
 from django.contrib.contenttypes.models import ContentType
 
-from supports import permisions
 
 # Создание менеджера пользователей
 class MyUserManager(BaseUserManager):
