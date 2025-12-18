@@ -139,13 +139,25 @@ class ApplicationCheck(models.Model):
 
 # Классы подмоделей в виде прокси
 
-class Client(User):
+class DefClient(User):
     class Meta:
         proxy = True
         permissions = [('can_login')]
         
         
-        
+class ClientMid(User):
+    class Meta:
+        proxy = True
+        permissions = [('can_login','can_create_contract','can_create_company')]
+        content_type = ContentType.objects.get_for_model(ClientMid, for_concrete_model=False)
+        clientfull_permissions = permissions.objects.filter(content_type=content_type)
+        [p.codename for p in clientfull_permissions]
+        ['can_login','can_create_contract','can_create_company']
+        for permission in clientfull_permissions:
+                User.user_permissions.add(permission)
+        User.has_perms(('can_login','can_create_contract','can_create_company'))
+        True        
+    
 class ClientFull(User):
     class Meta:
         proxy = True
@@ -156,7 +168,7 @@ class ClientFull(User):
         ['can_create_contract', 'can_create_ticket','can_close_ticket','can_create_company','can_update_company']
         for permission in clientfull_permissions:
                 User.user_permissions.add(permission)
-        User.has_perms((''))
+        User.has_perms(('app.can_create_contract','can_create_ticket','can_create_company','can_update_company'))
         True
 
 

@@ -141,27 +141,4 @@ def create_application(request):
 
 
 
-def user_login(request)
-
-
-
-
-def user_gains_perms(request, user_id):
-    content_type = content_type.objects.get_for_model(CreateContractForm)
-    permission = permission.objects.get(
-        codename='create_contract',
-        content_type=content_type,
-    )
-    User.user_permissions.add(permission)
-    
-    
-def support_perms(request):
-    content_type = content_type.objects.get_for_model(CreateTicketForm)
-    permission = permission.objects.get(
-    codename='create_contract',
-    content_type=content_type,
-    )
-    User.user_permissions.add(permission)
-    
-def client_perms(request)
     
