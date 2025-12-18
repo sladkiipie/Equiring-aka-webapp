@@ -19,15 +19,19 @@ def track_user_status_change(sender, instance, created, update_fields=None, **kw
 
 
 def user_status_change(instance): # функция изменения группы пользователей в зависимости от изменения статуса
-    GROUP_BY_STATUS = [
-        ('approved', 'user_without_contract'),
-        ('rejected', 'deleted_user'),
-    ]
+    GROUP_BY_STATUS = {
+        'approved': 'user_without_contract',
+        'rejected': 'deleted_user',
+    }
 
     if instance.status in GROUP_BY_STATUS: # проверка есть ли статус в словаре, и присвоение группы
         status = GROUP_BY_STATUS[instance.status]
         instance.groups.clear()
-        group = Group.objects.get(id=id)
+        try:
+            group = Group.objects.get(name=status)
+        except:
+            group = Group.objects.create(name=status)
+
         group.user_set.add(status)
 
         if status == 'approved': # отправка mail письма на создание аккаунта

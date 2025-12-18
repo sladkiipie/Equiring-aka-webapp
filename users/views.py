@@ -1,34 +1,34 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import User, RegistrationToken, Companies
-from .forms import CreateTicketForm, PrimaryUserForm, SetPasswordForm, CreateContractForm, CreateCompanyForm
+from .models import  RegistrationToken
+from .forms import CreateTicketForm, PrimaryUserForm, SetPasswordForm, CreateContractForm, CreateCompanyForm, LoginForm
 
 
 
 def guest_page(request):
     return render(request, 'users/mainpage.html')
 
-def login_page(request): #проверяет авторизован ли пользователь, если да то пропускает на главную страницу, если нет то открывает страницу авторизации
-    page = 'login'
+
+def login_page(request):
     if request.user.is_authenticated:
         return redirect('userhome')
+
     if request.method == 'POST':
-        uslog = request.POST.get('login')
-        password = request.POST.get('password')
-        try:
-            user = User.objects.get(uslog=uslog)
-        except:
-            messages.error(request, 'Пусто')
-        user = authenticate(request, login=uslog, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('userhome')
-        else: # если нет то ошибка
-            messages.error(request, 'Ничего нет')
-    context = {'page': page}
-    return render(request, 'users/loginpage.html', context)
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            user = authenticate(username=form.cleaned_data['login'], password=form.cleaned_data['password'])
+            if not user:
+                form.add_error(None, 'Неверный логин или пароль')
+            else:
+                login(request, user)
+                return redirect('userhome')
+    else:
+        form = LoginForm()
+
+    return render(request, 'users/loginpage.html', {'form': form})
+
 
 def create_primary_user(request): # создание первичной заявки на консультацию на открытие эквайринга
     if request.method == 'POST':
@@ -46,15 +46,15 @@ def set_password_view(request, token): # страница создания ак�
     if not registration_token.is_valid():
         return redirect('users/invalid_token.html')
     if request.method == 'POST':
-        form = SetPasswordForm(registration_token.user)
+        form = SetPasswordForm(registration_token.user, request.POST)
         if form.is_valid():
             form.save()
             registration_token.used = True
             registration_token.save()
             login(request, registration_token.user)
-            return redirect('login/')
+            return redirect('loginpage')
     else:
-        form = SetPasswordForm(User)
+        form = SetPasswordForm(registration_token.user)
     return render(request, "users/set_password.html", {'form': form})
 
 

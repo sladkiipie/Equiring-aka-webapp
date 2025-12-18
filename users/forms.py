@@ -49,3 +49,8 @@ class CreateContractForm(forms.ModelForm):
                 founder=user,
                 status='approved',
             )
+
+class LoginForm(forms.Form):
+    class Meta:
+        model = User
+        fields = ['login', 'password']

@@ -35,7 +35,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     ]
 
     login = models.CharField(max_length=255, unique=True, verbose_name='login')
-    password = models.CharField(max_length=128) # паоль хешиоруется на стороке бекенда
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=15)
     email = models.CharField(max_length=255)
