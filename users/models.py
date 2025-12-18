@@ -143,7 +143,14 @@ class DefClient(User):
     class Meta:
         proxy = True
         permissions = [('can_login')]
-        
+        content_type = ContentType.objects.get_for_model(ClientMid, for_concrete_model=False)
+        clientfull_permissions = permissions.objects.filter(content_type=content_type)
+        [p.codename for p in clientfull_permissions]
+        ['can_login']
+        for permission in clientfull_permissions:
+                User.user_permissions.add(permission)
+        User.has_perms(('can_login'))
+        True   
         
 class ClientMid(User):
     class Meta:
