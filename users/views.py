@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from .models import User, RegistrationToken, Companies
 from .forms import CreateTicketForm, PrimaryUserForm, SetPasswordForm, CreateContractForm, CreateCompanyForm
 
@@ -105,6 +105,7 @@ def ticket_page(request):
     return render(request, 'users/tickets.html')
 
 @login_required(login_url='login')
+@permission_required('core.view_ticket')
 def create_ticket(request):# создает тикет с данными из формы contract description
     if request.method == 'POST':
         form = CreateTicketForm(request.POST or None, user=request.user)
@@ -117,6 +118,7 @@ def create_ticket(request):# создает тикет с данными из ф
     return render(request, 'users/supticketform.html', {'form': form})
 
 @login_required(login_url='login')
+
 def applications_list(request):
     return render(request, 'users/applicationslist.html')
 
@@ -135,3 +137,31 @@ def create_application(request):
         form = CreateTicketForm()
 
     return render(request, 'users/applicationform.html', {'form': form})
+
+
+
+
+def user_login(request)
+
+
+
+
+def user_gains_perms(request, user_id):
+    content_type = content_type.objects.get_for_model(CreateContractForm)
+    permission = permission.objects.get(
+        codename='create_contract',
+        content_type=content_type,
+    )
+    User.user_permissions.add(permission)
+    
+    
+def support_perms(request):
+    content_type = content_type.objects.get_for_model(CreateTicketForm)
+    permission = permission.objects.get(
+    codename='create_contract',
+    content_type=content_type,
+    )
+    User.user_permissions.add(permission)
+    
+def client_perms(request)
+    

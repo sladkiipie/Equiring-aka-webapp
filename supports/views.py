@@ -4,6 +4,7 @@ from django.contrib import messages
 
 from .forms import CheckTicketForm, PrimaryUserCheckForm, CheckCompanyForm, CheckContractForm
 from .models import SupporTicket
+from django.contrib.auth.decorators import login_required, permission_required
 
 from users.models import Contracts, User, Companies
 

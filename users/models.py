@@ -4,7 +4,9 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.db.models import OneToOneField
+from django.contrib.contenttypes.models import ContentType
 
+from supports import permisions
 
 # Создание менеджера пользователей
 class MyUserManager(BaseUserManager):
@@ -52,6 +54,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.login
+    class Meta:
+     permissions = [('', )]
 
 def token_expired_at():
     return timezone.now() + timezone.timedelta(hours=24)
@@ -99,6 +103,7 @@ class Contracts(models.Model):
     def __str__(self):
         return self.name_contract
 
+
 class Transactions(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     contract = models.ForeignKey(Contracts, on_delete=models.CASCADE)
@@ -132,3 +137,47 @@ class ApplicationCheck(models.Model):
     def __str__(self):
         return self.application_id
 
+# Классы подмоделей в виде прокси
+
+class Client(User):
+    class Meta:
+        proxy = True
+        permissions = [('can_login')]
+        
+        
+        
+class ClientFull(User):
+    class Meta:
+        proxy = True
+        permissions = [('can_create_contract', 'can_create_ticket','can_close_ticket','can_create_company','can_update_company')]
+        content_type = ContentType.objects.get_for_model(ClientFull, for_concrete_model=False)
+        clientfull_permissions = permissions.objects.filter(content_type=content_type)
+        [p.codename for p in clientfull_permissions]
+        ['can_create_contract', 'can_create_ticket','can_close_ticket','can_create_company','can_update_company']
+        for permission in clientfull_permissions:
+                User.user_permissions.add(permission)
+        User.has_perms((''))
+        True
+
+
+
+class SupManager(User):
+    class Meta:
+        proxy = True
+        permissions = [('can_update_contract', 'can_update_supticket','can_update_application',)]
+        content_type = ContentType.objects.get_for_model(SupManager, for_concrete_model=False)
+        supmanager_permissions = permissions.objects.filter(content_type=content_type)
+        [p.codename for p in supmanager_permissions]
+        ['app.can_update_application','app.can_update_contract', 'app.can_update_ticket']
+        for permission in supmanager_permissions:
+                User.user_permissions.add(permission)
+        User.has_perms(('app.can_update_application','app.can_update_contract', 'app.can_update_ticket'))
+        True
+        
+        
+        
+        
+        
+
+    
+        
